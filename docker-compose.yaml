@@ -1,0 +1,17 @@
+version: '3.4'
+services:
+
+  # a fully loaded development environment to test new code
+  dev: &dev
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: .
+    image: little-cheesemonger_devbox
+    volumes:
+      - ./:/app
+
+  # run all the tests and linting locally
+  # - black & isort will format code to address issues
+  test:
+    <<: *dev
+    command: docker/run_tests.sh --format-code
