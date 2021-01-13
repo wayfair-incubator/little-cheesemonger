@@ -22,7 +22,7 @@ jobs:
           test-requirements: "true"
 
       - name: Run bandit
-        run: bandit --ini .bandit -r columbo
+        run: bandit --ini .bandit -r little_cheesemonger
 
   black:
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
           test-requirements: "true"
 
       - name: Run black
-        run: black --check columbo tests
+        run: black --check little_cheesemonger tests
 
   flake8:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
             test-requirements: "true"
 
         - name: Run flake8
-          run: flake8 columbo tests
+          run: flake8 little_cheesemonger tests
 
   isort:
     runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
           test-requirements: "true"
 
       - name: Run isort
-        run: isort --recursive --check-only columbo tests
+        run: isort --recursive --check-only little_cheesemonger tests
 
   mypy:
     runs-on: ubuntu-latest
@@ -88,7 +88,7 @@ jobs:
             test-requirements: "true"
 
         - name: Run mypy
-          run: mypy columbo tests
+          run: mypy little_cheesemonger tests
 
   test:
     runs-on: ubuntu-latest
@@ -143,4 +143,4 @@ jobs:
       - name: Verify wheel
         uses: ./.github/actions/verify-wheel
         with:
-          package-import-name: "columbo"
+          package-import-name: "little_cheesemonger"
