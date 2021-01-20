@@ -14,8 +14,8 @@ with open("little_cheesemonger/__init__.py", "rb") as f:
 
 
 setuptools.setup(
-    name="little-cheesemonger",
-    version=version,
+    name="little_cheesemonger",
+    version=version,    
     url="https://github.com/wayfair-incubator/little-cheesemonger",
     author="Chris Antonellis",
     author_email="cantonellis@wayfair.com",
@@ -25,6 +25,11 @@ setuptools.setup(
     packages=setuptools.find_packages(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
+    entry_points = {
+        "console_scripts": [
+            "little_cheesemonger=little_cheesemonger._cli:entrypoint"
+        ],
+    },
     package_data={"little_cheesemonger": ["py.typed"]},
     python_requires=">=3.6",
     install_requires=["click~=7.1"],
