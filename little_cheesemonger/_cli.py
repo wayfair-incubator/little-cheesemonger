@@ -57,7 +57,6 @@ def _process_kwargs(raw_kwargs: Tuple[str, ...]) -> Dict[str, str]:
     kwargs: Dict[str, str] = {}
 
     for raw_kwarg in raw_kwargs:
-
         try:
             key, value = raw_kwarg.split("=")
         except ValueError:
@@ -65,7 +64,6 @@ def _process_kwargs(raw_kwargs: Tuple[str, ...]) -> Dict[str, str]:
                 f"Invalid keyword argument '{raw_kwarg}' received for --data-loader-kwarg option. "
                 "Keyword arguments must be in KEY=VALUE format."
             )
-
         kwargs[key] = value
 
     return kwargs
