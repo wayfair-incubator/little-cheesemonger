@@ -25,6 +25,11 @@ setuptools.setup(
     packages=setuptools.find_packages(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
+    entry_points = {
+        "console_scripts": [
+            "little-cheesemonger=little_cheesemonger._cli:entrypoint"
+        ],
+    },
     package_data={"little_cheesemonger": ["py.typed"]},
     python_requires=">=3.6",
     install_requires=["click~=7.1"],

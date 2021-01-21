@@ -8,7 +8,8 @@ services:
       context: .
     image: little-cheesemonger_devbox
     volumes:
-      - ./:/app
+      - ./little_cheesemonger:/app/little_cheesemonger
+      - ./tests:/app/tests
 
   # run all the tests and linting locally
   # - black & isort will format code to address issues
