@@ -14,7 +14,7 @@ with open("little_cheesemonger/__init__.py", "rb") as f:
 
 
 setuptools.setup(
-    name="little_cheesemonger",
+    name="little-cheesemonger",
     version=version,
     url="https://github.com/wayfair-incubator/little-cheesemonger",
     author="Chris Antonellis",
