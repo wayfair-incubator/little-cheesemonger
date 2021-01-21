@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional, Tuple
 
 import click
 
@@ -11,14 +11,16 @@ LOGGER = logging.getLogger(__name__)
 
 @click.command()
 @click.argument("directory", type=Path, default=Path("."))
-@click.option("--debug", is_flag=True)
 @click.option("-dl", "--data-loader")
 @click.option("-dla", "--data-loader-arg", "data_loader_args", multiple=True)
+@click.option("-dlk", "--data-loader-kwarg", "data_loader_kwargs_raw", multiple=True)
+@click.option("--debug", is_flag=True)
 def entrypoint(
     directory: Path,
     debug: bool = False,
     data_loader: Optional[str] = None,
-    data_loader_args: Optional[list] = None,
+    data_loader_args: Optional[Tuple] = None,
+    data_loader_kwargs_raw: Optional[Tuple] = None,
 ):
 
     """
@@ -37,11 +39,33 @@ def entrypoint(
     logging.getLogger("little_cheesemonger").setLevel("DEBUG" if debug else "WARNING")
 
     try:
-        if data_loader_args and data_loader is None:
+
+        if (data_loader_args or data_loader_kwargs_raw) and data_loader is None:
             raise LittleCheesemongerError(
                 "Additional data loader arguments can only be used with a custom data loader."
             )
 
+        if data_loader_kwargs_raw:
+            _process_kwargs(data_loader_kwargs_raw)
+
     except LittleCheesemongerError as e:
         LOGGER.error(e)
         exit(1)
+
+
+def _process_kwargs(raw_kwargs: Tuple[str, ...]) -> Dict[str, str]:
+    kwargs: Dict[str, str] = {}
+
+    for raw_kwarg in raw_kwargs:
+
+        try:
+            key, value = raw_kwarg.split("=")
+        except ValueError:
+            raise LittleCheesemongerError(
+                f"Invalid keyword argument '{raw_kwarg}' received for --data-loader-kwarg option. "
+                "Keyword arguments must be in KEY=VALUE format."
+            )
+
+        kwargs[key] = value
+
+    return kwargs
