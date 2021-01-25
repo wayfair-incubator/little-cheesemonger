@@ -69,7 +69,7 @@ def test_entrypoint__custom_loader_shorthand(cli_runner):
 def test_entrypoint__custom_loader_and_arg(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
-        ["--loader", "my.custaom.loader", "--loader-arg", "baz"],
+        ["--loader", "my.custom.loader", "--loader-arg", "baz"],
     )
 
     assert result.exit_code == 0
