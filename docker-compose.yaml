@@ -10,6 +10,8 @@ services:
     volumes:
       - ./little_cheesemonger:/app/little_cheesemonger
       - ./tests:/app/tests
+    # environment:
+    #   - AUDITWHEEL_PLAT=example_platform
 
   # run all the tests and linting locally
   # - black & isort will format code to address issues

@@ -12,6 +12,11 @@ def cli_runner():
     return CliRunner()
 
 
+@pytest.fixture(autouse=True)
+def default_loader(mocker):
+    return mocker.patch("little_cheesemonger._cli.default_loader")
+
+
 def test_process_kwargs__return_dict():
     assert _process_kwargs(("foo=bar", "baz=qux")) == {"foo": "bar", "baz": "qux"}
 
@@ -49,44 +54,44 @@ def test_entrypoint__debug_set__log_level_set_to_DEBUG(cli_runner):
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--data-loader", "my_custom.data.loader"])
+def test_entrypoint__custom_loader(cli_runner):
+    result = cli_runner.invoke(entrypoint, ["--loader", "my.custom.loader"])
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_shorthand(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["-dl", "my_custom.data.loader"])
+def test_entrypoint__custom_loader_shorthand(cli_runner):
+    result = cli_runner.invoke(entrypoint, ["-l", "my.custom.loader"])
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_and_arg(cli_runner):
+def test_entrypoint__custom_loader_and_arg(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
-        ["--data-loader", "my_custom.data.loader", "--data-loader-arg", "baz"],
+        ["--loader", "my.custaom.loader", "--loader-arg", "baz"],
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_and_arg_shorthand(cli_runner):
+def test_entrypoint__custom_loader_and_arg_shorthand(cli_runner):
     result = cli_runner.invoke(
-        entrypoint, ["--data-loader", "my_custom.data.loader", "-dl", "baz"]
+        entrypoint, ["--loader", "my.custom.loader", "-l", "baz"]
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_and_multiple_args(cli_runner):
+def test_entrypoint__custom_loader_and_multiple_args(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
         [
-            "--data-loader",
-            "my_custom.data.loader",
-            "--data-loader-arg",
+            "--loader",
+            "my.custom.loader",
+            "--loader-arg",
             "baz",
-            "--data-loader-arg",
+            "--loader-arg",
             "qux",
         ],
     )
@@ -94,38 +99,38 @@ def test_entrypoint__custom_data_loader_and_multiple_args(cli_runner):
     assert result.exit_code == 0
 
 
-def test_entrypoint__data_loader_args_without_custom_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--data-loader-arg", "baz"])
+def test_entrypoint__loader_args_without_custom_loader(cli_runner):
+    result = cli_runner.invoke(entrypoint, ["--loader-arg", "baz"])
 
     assert result.exit_code == 1
 
 
-def test_entrypoint__custom_data_loader_and_kwarg(cli_runner):
+def test_entrypoint__custom_loader_and_kwarg(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
-        ["--data-loader", "my_custom.data.loader", "--data-loader-kwarg", "baz=qux"],
+        ["--loader", "my.custom.loader", "--loader-kwarg", "baz=qux"],
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_and_kwarg_shorthand(cli_runner):
+def test_entrypoint__custom_loader_and_kwarg_shorthand(cli_runner):
     result = cli_runner.invoke(
-        entrypoint, ["--data-loader", "my_custom.data.loader", "-dlk", "baz=qux"]
+        entrypoint, ["--loader", "my.custom.loader", "-lk", "baz=qux"]
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_data_loader_and_multiple_kwargs(cli_runner):
+def test_entrypoint__custom_loader_and_multiple_kwargs(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
         [
-            "--data-loader",
-            "my_custom.data.loader",
-            "--data-loader-kwarg",
+            "--loader",
+            "my.custom.loader",
+            "--loader-kwarg",
             "foo=bar",
-            "--data-loader-kwarg",
+            "--loader-kwarg",
             "baz=qux",
         ],
     )
@@ -133,21 +138,21 @@ def test_entrypoint__custom_data_loader_and_multiple_kwargs(cli_runner):
     assert result.exit_code == 0
 
 
-def test_entrypoint__data_loader_kwargs_without_custom_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--data-loader-kwarg", "baz=qux"])
+def test_entrypoint__loader_kwargs_without_custom_loader(cli_runner):
+    result = cli_runner.invoke(entrypoint, ["--loader-kwarg", "baz=qux"])
 
     assert result.exit_code == 1
 
 
-def test_entrypoint__data_loader_with_arg_and_kwarg(cli_runner):
+def test_entrypoint__loader_with_arg_and_kwarg(cli_runner):
     result = cli_runner.invoke(
         entrypoint,
         [
-            "--data-loader",
-            "my_custom.data.loader",
-            "--data-loader-arg",
+            "--loader",
+            "my.custom.loader",
+            "--loader-arg",
             "foo",
-            "--data-loader-kwarg",
+            "--loader-kwarg",
             "baz=qux",
         ],
     )
