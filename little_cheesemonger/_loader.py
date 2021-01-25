@@ -11,12 +11,15 @@ from little_cheesemonger._errors import LittleCheesemongerError
 LOGGER = logging.getLogger(__name__)
 
 
-def _determine_platform():
-    """Determine platform."""
+def _determine_platform() -> str:
+    """Determine the platform prior to executing a loader. Detection of
+    additional platforms beyond `manylinux` should happen here.
+    
+    :raises LittleCheesemongerError: Unable to identify the platform.
+    """
 
     platform = None
 
-    # manylinux
     try:
         platform = os.environ["AUDITWHEEL_PLAT"]
     except KeyError:
@@ -29,7 +32,15 @@ def _determine_platform():
 
 
 def default_loader(directory: Path) -> Dict[str, str]:
-    """Default configuration loader."""
+    """Default configuration loader. Loads package configuration from 
+    pyproject.toml file in `directory` and returns data from configuration 
+    section for platform identified by `_determine_platform` call.
+    
+    :param directory: Path instance representing path to directory 
+        containing pyproject.toml file.
+    :raises LittleCheesemongerError: Unable to locate or decode `pyproject.toml`
+    file, or unable to locate package data within file.
+    """
 
     # load pyproject.toml file
     try:
