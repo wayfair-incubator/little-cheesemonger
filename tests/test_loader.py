@@ -59,7 +59,7 @@ def test_default_loader__KeyError__raise_LittleCheesemongerError(
     load_toml.return_value = {}
 
     with pytest.raises(
-        LittleCheesemongerError, match="Error loading configuration for platform .*"
+        LittleCheesemongerError, match=r"Error loading configuration for platform .*"
     ):
         default_loader(DIRECTORY)
 
