@@ -21,6 +21,8 @@ def _determine_platform() -> str:
     platform = None
 
     try:
+        # NOTE: AUDITWHEEL_PLAT envvar set here
+        # https://github.com/pypa/manylinux/blob/master/docker/Dockerfile-x86_64#L6
         platform = os.environ["AUDITWHEEL_PLAT"]
     except KeyError:
         LOGGER.debug("Unable to identify platform as 'manylinux'")
@@ -55,6 +57,8 @@ def default_loader(directory: Path) -> Dict[str, str]:
     try:
         package_data = pyproject_data["tool"]["little-cheesemonger"][platform]
     except KeyError as e:
-        raise LittleCheesemongerError(f"Error loading configuration: {e}")
+        raise LittleCheesemongerError(
+            f"Error loading configuration for platform {platform}: {e}"
+        )
 
     return package_data

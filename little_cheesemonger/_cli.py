@@ -18,10 +18,10 @@ LOGGER = logging.getLogger(__name__)
 @click.option("--debug", is_flag=True)
 def entrypoint(
     directory: Path,
-    debug: bool = False,
-    loader: Optional[str] = None,
-    loader_args: Optional[Tuple] = None,
-    loader_kwargs_raw: Optional[Tuple] = None,
+    loader: Optional[str],
+    loader_args: Tuple[str, ...],
+    loader_kwargs_raw: Tuple[str, ...],
+    debug: bool,
 ):
 
     """

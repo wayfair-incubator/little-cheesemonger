@@ -37,23 +37,18 @@ def test_determine_platform__return_platform_name(os_environ):
 
 
 def test_determine_platform__raise_LittleCheesemongerError():
-    with pytest.raises(LittleCheesemongerError):
+    with pytest.raises(LittleCheesemongerError, match=r"Unable to determine platform"):
         _determine_platform()
 
 
-def test_default_loader__TomlDecodeError__raise_LittleCheesemongerError(load_toml):
+@pytest.mark.parametrize("error", [(TomlDecodeError("", "", 0),), (FileNotFoundError,)])
+def test_default_loader__error__raise_LittleCheesemongerError(error, load_toml):
 
-    load_toml.side_effect = TomlDecodeError("", "", 0)
+    load_toml.side_effect = error
 
-    with pytest.raises(LittleCheesemongerError):
-        default_loader(DIRECTORY)
-
-
-def test_default_loader__FileNotFoundError__raise_LittleCheesemongerError(load_toml):
-
-    load_toml.side_effect = FileNotFoundError
-
-    with pytest.raises(LittleCheesemongerError):
+    with pytest.raises(
+        LittleCheesemongerError, match=r"Error loading pyproject.toml:.*"
+    ):
         default_loader(DIRECTORY)
 
 
@@ -63,7 +58,9 @@ def test_default_loader__KeyError__raise_LittleCheesemongerError(
 
     load_toml.return_value = {}
 
-    with pytest.raises(LittleCheesemongerError):
+    with pytest.raises(
+        LittleCheesemongerError, match="Error loading configuration for platform .*"
+    ):
         default_loader(DIRECTORY)
 
 
