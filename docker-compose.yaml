@@ -7,8 +7,9 @@ services:
       dockerfile: ./docker/Dockerfile
       context: .
     image: little-cheesemonger_devbox
+    command: /bin/bash
     volumes:
-      - ./little_cheesemonger:/app/little_cheesemonger
+      - ./:/app
       - ./tests:/app/tests
 
   # run all the tests and linting locally
