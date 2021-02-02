@@ -5,7 +5,7 @@ import pytest
 from toml import TomlDecodeError
 
 from little_cheesemonger._errors import LittleCheesemongerError
-from little_cheesemonger._loader import _get_platform, default_loader
+from little_cheesemonger._loader import default_loader
 from tests.constants import PLATFORM
 
 
@@ -29,7 +29,7 @@ def load_toml(mocker):
 @pytest.fixture
 def get_platform(mocker):
     return mocker.patch(
-        "little_cheesemonger._loader._get_platform", return_value=PLATFORM
+        "little_cheesemonger._loader.get_platform", return_value=PLATFORM
     )
 
 

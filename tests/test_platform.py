@@ -1,6 +1,8 @@
 import pytest
 
 from little_cheesemonger._platform import get_platform
+from little_cheesemonger._errors import LittleCheesemongerError
+
 from tests.constants import PLATFORM
 
 

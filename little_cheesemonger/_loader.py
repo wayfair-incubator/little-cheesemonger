@@ -16,7 +16,7 @@ LOGGER = logging.getLogger(__name__)
 def default_loader(directory: Path) -> Dict[str, str]:
     """Default configuration loader. Loads package configuration from
     pyproject.toml file in `directory` and returns data from configuration
-    section for platform identified by `_determine_platform` call.
+    section for platform identified by `get_platform` call.
 
     :param directory: Path instance representing path to directory
         containing pyproject.toml file.

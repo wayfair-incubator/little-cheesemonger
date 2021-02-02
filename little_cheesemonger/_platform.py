@@ -1,4 +1,12 @@
+import os
+import logging
+
 from functools import lru_cache
+
+from little_cheesemonger._errors import LittleCheesemongerError
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 @lru_cache
