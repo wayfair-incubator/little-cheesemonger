@@ -4,6 +4,7 @@ import logging
 from functools import lru_cache
 
 from little_cheesemonger._errors import LittleCheesemongerError
+from little_cheesemonger._constants import PythonVersion, PYTHON_BINARIES
 
 
 LOGGER = logging.getLogger(__name__)
@@ -30,3 +31,13 @@ def get_platform() -> str:
         raise LittleCheesemongerError("Unable to determine platform")
 
     return platform
+
+
+def get_python_binaries(python_version: PythonVersion) -> None:
+    """ Return Path to Python binaries (python, pip) given a 
+    detectable platform and PythonVersion.
+    """
+    
+    platform, architecture = get_platform.split("=", 1)
+    
+    return PYTHON_BINARIES[architecture][platform][python_version]

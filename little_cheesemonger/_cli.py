@@ -47,6 +47,8 @@ def entrypoint(
                 "Additional loader arguments can only be used with a custom loader."
             )
 
+        configuration = {}
+
         if loader is not None:
             if loader_kwargs_raw:
                 _process_kwargs(loader_kwargs_raw)
@@ -57,7 +59,7 @@ def entrypoint(
         run(configuration)
 
     except LittleCheesemongerError as e:
-        LOGGER.error(e)
+        LOGGER.exception() if debug else LOGGER.error(e)
         exit(1)
 
 

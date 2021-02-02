@@ -15,11 +15,6 @@ PYPROJECT_DATA = {"tool": {"little-cheesemonger": {PLATFORM: PACKAGE_DATA}}}
 
 
 @pytest.fixture
-def os_environ(mocker):
-    return mocker.patch.dict(os.environ, {"AUDITWHEEL_PLAT": PLATFORM})
-
-
-@pytest.fixture
 def load_toml(mocker):
     return mocker.patch(
         "little_cheesemonger._loader.load_toml", return_value=PYPROJECT_DATA
