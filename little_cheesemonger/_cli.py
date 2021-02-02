@@ -5,22 +5,23 @@ from typing import Dict, Optional, Tuple
 import click
 
 from little_cheesemonger._errors import LittleCheesemongerError
+from little_cheesemonger._loader import default_loader
 
 LOGGER = logging.getLogger(__name__)
 
 
 @click.command()
 @click.argument("directory", type=Path, default=Path("."))
-@click.option("-dl", "--data-loader")
-@click.option("-dla", "--data-loader-arg", "data_loader_args", multiple=True)
-@click.option("-dlk", "--data-loader-kwarg", "data_loader_kwargs_raw", multiple=True)
+@click.option("-l", "--loader")
+@click.option("-la", "--loader-arg", "loader_args", multiple=True)
+@click.option("-lk", "--loader-kwarg", "loader_kwargs_raw", multiple=True)
 @click.option("--debug", is_flag=True)
 def entrypoint(
     directory: Path,
-    debug: bool = False,
-    data_loader: Optional[str] = None,
-    data_loader_args: Optional[Tuple] = None,
-    data_loader_kwargs_raw: Optional[Tuple] = None,
+    loader: Optional[str],
+    loader_args: Tuple[str, ...],
+    loader_kwargs_raw: Tuple[str, ...],
+    debug: bool,
 ):
 
     """
@@ -29,24 +30,28 @@ def entrypoint(
     :param directory: The directory from which to load configuration data. Typically a python package
         containing a `pyproject.toml` file. Defaults to the local directory.
     :param debug: If set to True, sets log level for the application to DEBUG.
-    :param data_loader: Optional. Path to a class implementing a custom data loader in
+    :param loader: Optional. Path to a class implementing a custom loader in
         Python import synxtax ex. "package.module.class".
-    :param data_loader_args: Additional positional arguments to be passed to a custom data loader.
+    :param loader_args: Additional positional arguments to be passed to a custom loader.
         NOTE: Arguments are passed after the `directory` argument in the order they are set.
-    :raises LittleCheesemongerError: Data loader arguments are set without a custom data loader.
+    :raises LittleCheesemongerError: Loader arguments are set without a custom loader.
     """
 
     logging.getLogger("little_cheesemonger").setLevel("DEBUG" if debug else "WARNING")
 
     try:
 
-        if (data_loader_args or data_loader_kwargs_raw) and data_loader is None:
+        if (loader_args or loader_kwargs_raw) and loader is None:
             raise LittleCheesemongerError(
-                "Additional data loader arguments can only be used with a custom data loader."
+                "Additional loader arguments can only be used with a custom loader."
             )
 
-        if data_loader_kwargs_raw:
-            _process_kwargs(data_loader_kwargs_raw)
+        if loader is not None:
+            if loader_kwargs_raw:
+                _process_kwargs(loader_kwargs_raw)
+
+        else:
+            default_loader(directory)
 
     except LittleCheesemongerError as e:
         LOGGER.error(e)
@@ -61,7 +66,7 @@ def _process_kwargs(raw_kwargs: Tuple[str, ...]) -> Dict[str, str]:
             key, value = raw_kwarg.split("=")
         except ValueError:
             raise LittleCheesemongerError(
-                f"Invalid keyword argument '{raw_kwarg}' received for --data-loader-kwarg option. "
+                f"Invalid keyword argument '{raw_kwarg}' received for --loader-kwarg option. "
                 "Keyword arguments must be in KEY=VALUE format."
             )
         kwargs[key] = value
