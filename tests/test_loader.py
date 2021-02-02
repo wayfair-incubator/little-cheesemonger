@@ -5,9 +5,10 @@ import pytest
 from toml import TomlDecodeError
 
 from little_cheesemonger._errors import LittleCheesemongerError
-from little_cheesemonger._loader import _determine_platform, default_loader
+from little_cheesemonger._loader import _get_platform, default_loader
+from tests.constants import PLATFORM
 
-PLATFORM = "test_platform"
+
 DIRECTORY = Path(".")
 PACKAGE_DATA = {"foo": "bar"}
 PYPROJECT_DATA = {"tool": {"little-cheesemonger": {PLATFORM: PACKAGE_DATA}}}
@@ -26,19 +27,10 @@ def load_toml(mocker):
 
 
 @pytest.fixture
-def determine_platform(mocker):
+def get_platform(mocker):
     return mocker.patch(
-        "little_cheesemonger._loader._determine_platform", return_value=PLATFORM
+        "little_cheesemonger._loader._get_platform", return_value=PLATFORM
     )
-
-
-def test_determine_platform__return_platform_name(os_environ):
-    assert _determine_platform() == PLATFORM
-
-
-def test_determine_platform__raise_LittleCheesemongerError():
-    with pytest.raises(LittleCheesemongerError, match=r"Unable to determine platform"):
-        _determine_platform()
 
 
 @pytest.mark.parametrize("error", [(TomlDecodeError("", "", 0),), (FileNotFoundError,)])
@@ -53,7 +45,7 @@ def test_default_loader__error__raise_LittleCheesemongerError(error, load_toml):
 
 
 def test_default_loader__KeyError__raise_LittleCheesemongerError(
-    load_toml, determine_platform
+    load_toml, get_platform
 ):
 
     load_toml.return_value = {}
@@ -64,5 +56,5 @@ def test_default_loader__KeyError__raise_LittleCheesemongerError(
         default_loader(DIRECTORY)
 
 
-def test_default_loader__return_package_data(load_toml, determine_platform):
+def test_default_loader__return_package_data(load_toml, get_platform):
     assert default_loader(DIRECTORY) == PACKAGE_DATA

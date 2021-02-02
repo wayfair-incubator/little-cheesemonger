@@ -6,6 +6,7 @@ import click
 
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import default_loader
+from little_cheesemonger._run import run
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,7 +52,9 @@ def entrypoint(
                 _process_kwargs(loader_kwargs_raw)
 
         else:
-            default_loader(directory)
+            configuration = default_loader(directory)
+            
+        run(configuration)
 
     except LittleCheesemongerError as e:
         LOGGER.error(e)

@@ -1,0 +1,1 @@
+PLATFORM = "test_platform"

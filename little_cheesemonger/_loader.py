@@ -7,30 +7,10 @@ from toml import TomlDecodeError
 from toml import load as load_toml
 
 from little_cheesemonger._errors import LittleCheesemongerError
+from little_cheesemonger._platform import get_platform
+
 
 LOGGER = logging.getLogger(__name__)
-
-
-def _determine_platform() -> str:
-    """Determine the platform prior to executing a loader. Detection of
-    additional platforms beyond `manylinux` should happen here.
-
-    :raises LittleCheesemongerError: Unable to identify the platform.
-    """
-
-    platform = None
-
-    try:
-        # NOTE: AUDITWHEEL_PLAT envvar set here
-        # https://github.com/pypa/manylinux/blob/master/docker/Dockerfile-x86_64#L6
-        platform = os.environ["AUDITWHEEL_PLAT"]
-    except KeyError:
-        LOGGER.debug("Unable to identify platform as 'manylinux'")
-
-    if platform is None:
-        raise LittleCheesemongerError("Unable to determine platform")
-
-    return platform
 
 
 def default_loader(directory: Path) -> Dict[str, str]:
@@ -50,8 +30,7 @@ def default_loader(directory: Path) -> Dict[str, str]:
     except (TomlDecodeError, FileNotFoundError) as e:
         raise LittleCheesemongerError(f"Error loading pyproject.toml: {e}")
 
-    # determine platform
-    platform = _determine_platform()
+    platform = get_platform()
 
     # load package configuration
     try:
