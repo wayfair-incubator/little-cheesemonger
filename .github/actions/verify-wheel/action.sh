@@ -19,6 +19,10 @@ echo "------------------"
 echo "Installing package"
 pip install ${APP_DIR}/dist/*.whl
 
+echo "------------------"
+echo "Listing installed packages"
+pip list
+
 echo "-----------------------------"
 echo "Attempting to import package"
 python "${GITHUB_ACTION_PATH}/test_module_import.py" "${MODULE_NAME}"
