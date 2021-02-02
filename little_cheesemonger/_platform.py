@@ -1,11 +1,16 @@
-import os
 import logging
-
+import os
 from functools import lru_cache
+from pathlib import Path
+from typing import Dict
 
+from little_cheesemonger._constants import (
+    PYTHON_BINARIES,
+    Architecture,
+    Platform,
+    PythonVersion,
+)
 from little_cheesemonger._errors import LittleCheesemongerError
-from little_cheesemonger._constants import PythonVersion, PYTHON_BINARIES
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,11 +38,18 @@ def get_platform() -> str:
     return platform
 
 
-def get_python_binaries(python_version: PythonVersion) -> None:
-    """ Return Path to Python binaries (python, pip) given a 
-    detectable platform and PythonVersion.
+def get_python_binaries() -> Dict[PythonVersion, Path]:
+    """Return a dict mapping of PythonVersion to Path object of the
+    path to the Python binaries (python, pip etc) for that version.
     """
-    
-    platform, architecture = get_platform.split("=", 1)
-    
-    return PYTHON_BINARIES[architecture][platform][python_version]
+
+    platform, architecture = get_platform().split("_", 1)
+
+    print(platform, architecture)
+
+    try:
+        return PYTHON_BINARIES[Architecture[architecture]][Platform[platform]]
+    except KeyError:
+        raise LittleCheesemongerError(
+            "No value in PYTHON_BINARIES constant for architecture or platform."
+        )

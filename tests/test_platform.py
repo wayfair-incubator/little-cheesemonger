@@ -1,10 +1,10 @@
 import os
+
 import pytest
 
-from little_cheesemonger._platform import get_platform
 from little_cheesemonger._errors import LittleCheesemongerError
-
-from tests.constants import PLATFORM
+from little_cheesemonger._platform import get_platform, get_python_binaries
+from tests.constants import PLATFORM_RAW, PYTHON_BINARIES, Architecture, Platform
 
 
 @pytest.fixture
@@ -15,13 +15,45 @@ def platform_cache_clear():
 
 @pytest.fixture
 def os_environ(mocker):
-    return mocker.patch.dict(os.environ, {"AUDITWHEEL_PLAT": PLATFORM})
-    
+    return mocker.patch.dict(os.environ, {"AUDITWHEEL_PLAT": PLATFORM_RAW})
+
+
+@pytest.fixture
+def architecture_mock(mocker):
+    return mocker.patch("little_cheesemonger._platform.Architecture", Architecture)
+
+
+@pytest.fixture
+def platform_mock(mocker):
+    return mocker.patch("little_cheesemonger._platform.Platform", Platform)
+
 
 def test_get_platform__return_platform_name(os_environ, platform_cache_clear):
-    assert get_platform() == PLATFORM
+    assert get_platform() == PLATFORM_RAW
 
 
 def test_get_platform__raise_LittleCheesemongerError(platform_cache_clear):
     with pytest.raises(LittleCheesemongerError, match=r"Unable to determine platform"):
         get_platform()
+
+
+def test_get_python_binaries__return_binaries_for_architecture_and_platform(
+    os_environ, mocker, architecture_mock, platform_mock
+):
+
+    mocker.patch.dict("little_cheesemonger._platform.PYTHON_BINARIES", PYTHON_BINARIES)
+
+    assert (
+        get_python_binaries()
+        == PYTHON_BINARIES[Architecture.architecture][Platform.platform]
+    )
+
+
+def test_get_python_binaries__raise_LittleCheesemongerError(os_environ, mocker):
+
+    mocker.patch.dict("little_cheesemonger._platform.PYTHON_BINARIES", {})
+
+    with pytest.raises(
+        LittleCheesemongerError, match=r"No value in PYTHON_BINARIES .*"
+    ):
+        get_python_binaries()

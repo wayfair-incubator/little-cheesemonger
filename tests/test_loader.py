@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import pytest
@@ -7,7 +6,6 @@ from toml import TomlDecodeError
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import default_loader
 from tests.constants import PLATFORM
-
 
 DIRECTORY = Path(".")
 PACKAGE_DATA = {"foo": "bar"}

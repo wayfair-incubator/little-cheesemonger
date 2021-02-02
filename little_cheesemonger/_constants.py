@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class Architecture(str, Enum):
-    x86_64 ="x86_64"
+    x86_64 = "x86_64"
 
 
 class Platform(str, Enum):
@@ -32,7 +32,7 @@ PYTHON_BINARIES = {
             PythonVersion.cp36_cp36m: Path("/opt/python/cp36-cp36m"),
             PythonVersion.cp37_cp37m: Path("/opt/python/cp37-cp37m"),
             PythonVersion.cp38_cp38: Path("/opt/python/cp38-cp38"),
-            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39")
+            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39"),
         },
         Platform.manylinux2010: {
             PythonVersion.cp27_cp27m: Path("/opt/python/cp27-cp27m"),
@@ -42,7 +42,7 @@ PYTHON_BINARIES = {
             PythonVersion.cp36_cp36m: Path("/opt/python/cp36-cp36m"),
             PythonVersion.cp37_cp37m: Path("/opt/python/cp37-cp37m"),
             PythonVersion.cp38_cp38: Path("/opt/python/cp38-cp38"),
-            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39")
+            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39"),
         },
         Platform.manylinux2014: {
             PythonVersion.cp27_cp27m: Path("/opt/python/cp27-cp27m"),
@@ -52,7 +52,7 @@ PYTHON_BINARIES = {
             PythonVersion.cp36_cp36m: Path("/opt/python/cp36-cp36m"),
             PythonVersion.cp37_cp37m: Path("/opt/python/cp37-cp37m"),
             PythonVersion.cp38_cp38: Path("/opt/python/cp38-cp38"),
-            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39")
-        }
+            PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39"),
+        },
     }
 }

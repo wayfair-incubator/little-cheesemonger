@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import click
 
@@ -47,7 +47,7 @@ def entrypoint(
                 "Additional loader arguments can only be used with a custom loader."
             )
 
-        configuration = {}
+        configuration: Dict[str, Union[List[str], str]] = {}
 
         if loader is not None:
             if loader_kwargs_raw:
@@ -55,11 +55,11 @@ def entrypoint(
 
         else:
             configuration = default_loader(directory)
-            
+
         run(configuration)
 
     except LittleCheesemongerError as e:
-        LOGGER.exception() if debug else LOGGER.error(e)
+        LOGGER.exception(e) if debug else LOGGER.error(e)
         exit(1)
 
 

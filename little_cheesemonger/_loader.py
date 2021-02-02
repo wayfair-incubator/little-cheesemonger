@@ -1,7 +1,6 @@
 import logging
-import os
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Union
 
 from toml import TomlDecodeError
 from toml import load as load_toml
@@ -9,11 +8,10 @@ from toml import load as load_toml
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._platform import get_platform
 
-
 LOGGER = logging.getLogger(__name__)
 
 
-def default_loader(directory: Path) -> Dict[str, str]:
+def default_loader(directory: Path) -> Dict[str, Union[List[str], str]]:
     """Default configuration loader. Loads package configuration from
     pyproject.toml file in `directory` and returns data from configuration
     section for platform identified by `get_platform` call.
