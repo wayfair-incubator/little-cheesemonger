@@ -1,4 +1,10 @@
-from typing import List, Optional, TypedDict
+import sys
+from typing import List, Optional
+
+if sys.version_info >= (3, 8):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
 
 
 class ConfigurationType(TypedDict):
