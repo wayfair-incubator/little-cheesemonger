@@ -1,6 +1,8 @@
 from enum import Enum
 from pathlib import Path
 
+from little_cheesemonger._types import ConfigurationType
+
 
 class Architecture(str, Enum):
     x86_64 = "x86_64"
@@ -55,4 +57,11 @@ PYTHON_BINARIES = {
             PythonVersion.cp39_cp39: Path("/opt/python/cp39-cp39"),
         },
     }
+}
+
+DEFAULT_CONFIGURATION: ConfigurationType = {
+    "environment_variables": None,
+    "system_dependencies": None,
+    "python_dependencies": None,
+    "steps": None,
 }

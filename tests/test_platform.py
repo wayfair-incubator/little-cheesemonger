@@ -7,7 +7,7 @@ from little_cheesemonger._platform import get_platform, get_python_binaries
 from tests.constants import PLATFORM_RAW, PYTHON_BINARIES, Architecture, Platform
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def platform_cache_clear():
     get_platform.cache_clear()
     yield
@@ -28,11 +28,21 @@ def platform_mock(mocker):
     return mocker.patch("little_cheesemonger._platform.Platform", Platform)
 
 
-def test_get_platform__return_platform_name(os_environ, platform_cache_clear):
+def test_get_platform__return_platform_name(os_environ):
     assert get_platform() == PLATFORM_RAW
 
 
-def test_get_platform__raise_LittleCheesemongerError(platform_cache_clear):
+def test_get_platform__environment_variable_not_set__raise_LittleCheesemongerError():
+    with pytest.raises(LittleCheesemongerError, match=r"Unable to determine platform"):
+        get_platform()
+
+
+def test_get_platform__unable_to_determine_platform__raise_LittleCheesemongerError(
+    mocker,
+):
+
+    mocker.patch.dict(os.environ, {"AUDITWHEEL_PLAT": "invalid-format"})
+
     with pytest.raises(LittleCheesemongerError, match=r"Unable to determine platform"):
         get_platform()
 

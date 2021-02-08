@@ -5,23 +5,24 @@ from typing import List
 
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._platform import get_python_binaries
+from little_cheesemonger._types import ConfigurationType
 
 LOGGER = logging.getLogger(__name__)
 
 
-def run(configuration: dict) -> None:
+def run(configuration: ConfigurationType) -> None:
     """Run build environment setup per configuration."""
 
-    if "environment_variables" in configuration:
+    if configuration["environment_variables"] is not None:
         set_environment_variables(configuration["environment_variables"])
 
-    if "system_dependencies" in configuration:
+    if configuration["system_dependencies"] is not None:
         install_system_dependencies(configuration["system_dependencies"])
 
-    if "python_dependencies" in configuration:
+    if configuration["python_dependencies"] is not None:
         install_python_dependencies(configuration["python_dependencies"])
 
-    if "steps" in configuration:
+    if configuration["steps"] is not None:
         execute_steps(configuration["steps"])
 
 
@@ -53,7 +54,7 @@ def install_system_dependencies(dependencies: List[str]) -> None:
 def install_python_dependencies(dependencies: List[str]) -> None:
     """Install Python dependencies."""
 
-    for _, binaries in get_python_binaries().items():
+    for binaries in get_python_binaries().values():
         run_subprocess([str(binaries / "pip"), "install"] + dependencies)
 
 

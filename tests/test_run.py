@@ -89,7 +89,7 @@ def test_run__environment_variables_not_set_in_configuration__set_environment_va
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
-    del configuration["environment_variables"]
+    configuration["environment_variables"] = None
 
     run(configuration)
 
@@ -116,7 +116,7 @@ def test_run__system_dependencies_not_set_in_configuration__install_system_depen
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
-    del configuration["system_dependencies"]
+    configuration["system_dependencies"] = None
 
     run(configuration)
 
@@ -143,7 +143,7 @@ def test_run__python_dependencies_not_set_in_configuration__install_python_depen
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
-    del configuration["python_dependencies"]
+    configuration["python_dependencies"] = None
 
     run(configuration)
 
@@ -170,7 +170,7 @@ def test_run__steps_not_set_in_configuration__execute_steps_not_called(
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
-    del configuration["steps"]
+    configuration["steps"] = None
 
     run(configuration)
 

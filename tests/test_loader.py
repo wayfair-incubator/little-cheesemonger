@@ -1,8 +1,10 @@
+import copy
 from pathlib import Path
 
 import pytest
 from toml import TomlDecodeError
 
+from little_cheesemonger._constants import DEFAULT_CONFIGURATION
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import default_loader
 from tests.constants import PLATFORM
@@ -50,4 +52,8 @@ def test_default_loader__KeyError__raise_LittleCheesemongerError(
 
 
 def test_default_loader__return_package_data(load_toml, get_platform):
-    assert default_loader(DIRECTORY) == PACKAGE_DATA
+
+    expected_configuration = copy.copy(DEFAULT_CONFIGURATION)
+    expected_configuration.update(PACKAGE_DATA)
+
+    assert default_loader(DIRECTORY) == expected_configuration

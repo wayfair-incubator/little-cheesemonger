@@ -1,8 +1,9 @@
 import logging
 import os
+import re
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 from little_cheesemonger._constants import (
     PYTHON_BINARIES,
@@ -13,29 +14,51 @@ from little_cheesemonger._constants import (
 from little_cheesemonger._errors import LittleCheesemongerError
 
 LOGGER = logging.getLogger(__name__)
+PLATFORM_PATTERN = ".+_.+"  # NOTE: <platform>_<architecture>
+
+
+def get_platform_manylinux() -> Optional[str]:
+    """Check for platform string in location provided by
+    manylinux images.
+
+    :return: The identified platform
+    :rtype: str, None
+    """
+
+    platform = os.environ.get("AUDITWHEEL_PLAT")
+
+    if platform is None:
+        LOGGER.debug("AUDITWHEEL_PLAT environment variable not set")
+        return None
+
+    if not re.match(PLATFORM_PATTERN, platform):
+        LOGGER.debug(
+            f"AUDITWHEEL_PLAT environment variable value {platform} "
+            "does not match PLATFORM_ARCHITECTURE pattern"
+        )
+        return None
+
+    return platform
+
+
+GET_PLATFORM_FUNCTIONS = (get_platform_manylinux,)
 
 
 @lru_cache
 def get_platform() -> str:
-    """Determine the platform prior to executing a loader. Detection of
-    additional platforms beyond `manylinux` should happen here.
+    """Determine the platform prior to executing a loader.
 
     :raises LittleCheesemongerError: Unable to identify the platform.
     """
 
     platform = None
 
-    try:
-        # NOTE: AUDITWHEEL_PLAT envvar set here
-        # https://github.com/pypa/manylinux/blob/master/docker/Dockerfile-x86_64#L6
-        platform = os.environ["AUDITWHEEL_PLAT"]
-    except KeyError:
-        LOGGER.debug("Unable to identify platform as 'manylinux'")
+    for function in GET_PLATFORM_FUNCTIONS:
+        platform = function()
+        if platform is not None:
+            return platform
 
-    if platform is None:
-        raise LittleCheesemongerError("Unable to determine platform")
-
-    return platform
+    raise LittleCheesemongerError("Unable to determine platform")
 
 
 def get_python_binaries() -> Dict[PythonVersion, Path]:
@@ -45,11 +68,11 @@ def get_python_binaries() -> Dict[PythonVersion, Path]:
 
     platform, architecture = get_platform().split("_", 1)
 
-    print(platform, architecture)
-
     try:
         return PYTHON_BINARIES[Architecture[architecture]][Platform[platform]]
     except KeyError:
         raise LittleCheesemongerError(
-            "No value in PYTHON_BINARIES constant for architecture or platform."
+            "No value in PYTHON_BINARIES constant for "
+            f"architecture `{Architecture[architecture]}` or "
+            f"platform `{Platform[platform]}`"
         )
