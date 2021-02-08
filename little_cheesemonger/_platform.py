@@ -44,7 +44,7 @@ def get_platform_manylinux() -> Optional[str]:
 GET_PLATFORM_FUNCTIONS = (get_platform_manylinux,)
 
 
-@lru_cache
+@lru_cache(maxsize=None)
 def get_platform() -> str:
     """Determine the platform prior to executing a loader.
 
