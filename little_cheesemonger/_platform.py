@@ -73,6 +73,6 @@ def get_python_binaries() -> Dict[PythonVersion, Path]:
     except KeyError:
         raise LittleCheesemongerError(
             "No value in PYTHON_BINARIES constant for "
-            f"architecture `{Architecture[architecture]}` or "
-            f"platform `{Platform[platform]}`"
+            f"architecture `{architecture}` or "
+            f"platform `{platform}`"
         )
