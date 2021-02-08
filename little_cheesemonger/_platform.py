@@ -51,8 +51,6 @@ def get_platform() -> str:
     :raises LittleCheesemongerError: Unable to identify the platform.
     """
 
-    platform = None
-
     for function in GET_PLATFORM_FUNCTIONS:
         platform = function()
         if platform is not None:
