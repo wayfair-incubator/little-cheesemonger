@@ -1,19 +1,54 @@
 version: '3.4'
+
+# Defaults
+
+x-build-args-36: &build_args_36
+  IMAGE_TAG: "3.6-buster"
+
+x-build-args-37: &build_args_37
+  IMAGE_TAG: "3.7-buster"
+
+x-build-args-38: &build_args_38
+  IMAGE_TAG: "3.8-buster"
+
 services:
 
-  # a fully loaded development environment to test new code
+  # Devbox
+  
   dev: &dev
-    build:
+    build: &default_build
       dockerfile: ./docker/Dockerfile
       context: .
-    image: little-cheesemonger_devbox
+    image: little-cheesemonger-dev
     command: /bin/bash
     volumes:
       - ./:/app
-      - ./tests:/app/tests
 
-  # run all the tests and linting locally
-  # - black & isort will format code to address issues
-  test:
+  # Test & Lint suite
+  
+  test-36:
     <<: *dev
+    build:
+      <<: *default_build
+      args:
+        <<: *build_args_36
+    image: little-cheesemonger-test-36
+    command: docker/run_tests.sh
+  
+  test-37:
+    <<: *dev
+    build:
+      <<: *default_build
+      args:
+        <<: *build_args_37
+    image: little-cheesemonger-test-37
+    command: docker/run_tests.sh
+  
+  test-38:
+    <<: *dev
+    build:
+      <<: *default_build
+      args:
+        <<: *build_args_38
+    image: little-cheesemonger-test-38
     command: docker/run_tests.sh --format-code

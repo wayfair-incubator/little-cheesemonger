@@ -1,11 +1,15 @@
+import copy
 import logging
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import click
 
+from little_cheesemonger._constants import DEFAULT_CONFIGURATION
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import default_loader
+from little_cheesemonger._run import run
+from little_cheesemonger._types import ConfigurationType
 
 LOGGER = logging.getLogger(__name__)
 
@@ -46,15 +50,19 @@ def entrypoint(
                 "Additional loader arguments can only be used with a custom loader."
             )
 
+        configuration: ConfigurationType = copy.copy(DEFAULT_CONFIGURATION)
+
         if loader is not None:
             if loader_kwargs_raw:
                 _process_kwargs(loader_kwargs_raw)
 
         else:
-            default_loader(directory)
+            configuration = default_loader(directory)
+
+        run(configuration)
 
     except LittleCheesemongerError as e:
-        LOGGER.error(e)
+        LOGGER.exception(e) if debug else LOGGER.error(e)
         exit(1)
 
 

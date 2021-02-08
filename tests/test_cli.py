@@ -17,6 +17,11 @@ def default_loader(mocker):
     return mocker.patch("little_cheesemonger._cli.default_loader")
 
 
+@pytest.fixture(autouse=True)
+def run(mocker):
+    return mocker.patch("little_cheesemonger._cli.run")
+
+
 def test_process_kwargs__return_dict():
     assert _process_kwargs(("foo=bar", "baz=qux")) == {"foo": "bar", "baz": "qux"}
 
