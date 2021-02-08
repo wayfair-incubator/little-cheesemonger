@@ -66,7 +66,7 @@ def os_mock(mocker):
 
 @pytest.fixture
 def subprocess_run_mock(mocker):
-    return mocker.patch("little_cheesemonger._run.subprocess.run")
+    return mocker.patch("subprocess.run")
 
 
 def test_run__environment_variables_set_in_configuration__set_environment_variables_called(
