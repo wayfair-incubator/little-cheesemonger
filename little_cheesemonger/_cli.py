@@ -1,7 +1,7 @@
 import copy
 import logging
 from pathlib import Path
-from typing import Callable, Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import click
 
