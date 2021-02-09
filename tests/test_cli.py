@@ -3,7 +3,7 @@ import logging
 import pytest
 from click.testing import CliRunner
 
-from little_cheesemonger._cli import _process_kwargs, entrypoint
+from little_cheesemonger._cli import entrypoint, process_kwargs
 from little_cheesemonger._errors import LittleCheesemongerError
 
 
@@ -13,8 +13,18 @@ def cli_runner():
 
 
 @pytest.fixture(autouse=True)
+def log_level(caplog):
+    caplog.set_level(logging.DEBUG)
+
+
+@pytest.fixture
 def default_loader(mocker):
     return mocker.patch("little_cheesemonger._cli.default_loader")
+
+
+@pytest.fixture
+def import_module(mocker):
+    return mocker.patch("little_cheesemonger._cli.import_module")
 
 
 @pytest.fixture(autouse=True)
@@ -22,73 +32,80 @@ def run(mocker):
     return mocker.patch("little_cheesemonger._cli.run")
 
 
-def test_process_kwargs__return_dict():
-    assert _process_kwargs(("foo=bar", "baz=qux")) == {"foo": "bar", "baz": "qux"}
+def testprocess_kwargs__return_dict():
+    assert process_kwargs(("foo=bar", "baz=qux")) == {"foo": "bar", "baz": "qux"}
 
 
-def test_process_kwargs__malformed_mapping_string__raise_LittleCheesemongerError():
+def testprocess_kwargs__malformed_mapping_string__raise_LittleCheesemongerError():
     with pytest.raises(LittleCheesemongerError):
-        _process_kwargs(("invalid",))
+        process_kwargs(("invalid",))
 
 
-def test_entrypoint__no_args(cli_runner):
-    result = cli_runner.invoke(entrypoint)
-
-    assert result.exit_code == 0
-
-
-def test_entrypoint__custom_directory(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["my_directory"])
+def test_entrypoint__no_args(cli_runner, default_loader):
+    result = cli_runner.invoke(entrypoint, catch_exceptions=False)
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__debug_not_set__log_level_set_to_WARNING(cli_runner):
+def test_entrypoint__custom_directory(cli_runner, default_loader):
+    result = cli_runner.invoke(entrypoint, ["my_directory"], catch_exceptions=False)
 
-    result = cli_runner.invoke(entrypoint)
-
-    assert logging.getLogger("little_cheesemonger").level == logging.WARNING
     assert result.exit_code == 0
 
 
-def test_entrypoint__debug_set__log_level_set_to_DEBUG(cli_runner):
+def test_entrypoint__debug_not_set__log_level_set_to_INFO(cli_runner, default_loader):
 
-    result = cli_runner.invoke(entrypoint, ["--debug"])
+    result = cli_runner.invoke(entrypoint, catch_exceptions=False)
+
+    assert logging.getLogger("little_cheesemonger").level == logging.INFO
+    assert result.exit_code == 0
+
+
+def test_entrypoint__debug_set__log_level_set_to_DEBUG(cli_runner, default_loader):
+
+    result = cli_runner.invoke(entrypoint, ["--debug"], catch_exceptions=False)
 
     assert logging.getLogger("little_cheesemonger").level == logging.DEBUG
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--loader", "my.custom.loader"])
+def test_entrypoint__custom_loader(cli_runner, import_module):
+    result = cli_runner.invoke(
+        entrypoint, ["--loader", "my.custom.loader"], catch_exceptions=False
+    )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_shorthand(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["-l", "my.custom.loader"])
+def test_entrypoint__custom_loader_shorthand(cli_runner, import_module):
+    result = cli_runner.invoke(
+        entrypoint, ["-l", "my.custom.loader"], catch_exceptions=False
+    )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_and_arg(cli_runner):
+def test_entrypoint__custom_loader_and_arg(cli_runner, import_module):
     result = cli_runner.invoke(
         entrypoint,
         ["--loader", "my.custom.loader", "--loader-arg", "baz"],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_and_arg_shorthand(cli_runner):
+def test_entrypoint__custom_loader_and_arg_shorthand(cli_runner, import_module):
     result = cli_runner.invoke(
-        entrypoint, ["--loader", "my.custom.loader", "-l", "baz"]
+        entrypoint,
+        ["--loader", "my.custom.loader", "-l", "baz"],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_and_multiple_args(cli_runner):
+def test_entrypoint__custom_loader_and_multiple_args(cli_runner, import_module):
     result = cli_runner.invoke(
         entrypoint,
         [
@@ -99,35 +116,41 @@ def test_entrypoint__custom_loader_and_multiple_args(cli_runner):
             "--loader-arg",
             "qux",
         ],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__loader_args_without_custom_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--loader-arg", "baz"])
+def test_entrypoint__loader_args_without_custom_loader(cli_runner, import_module):
+    result = cli_runner.invoke(
+        entrypoint, ["--loader-arg", "baz"], catch_exceptions=False
+    )
 
     assert result.exit_code == 1
 
 
-def test_entrypoint__custom_loader_and_kwarg(cli_runner):
+def test_entrypoint__custom_loader_and_kwarg(cli_runner, import_module):
     result = cli_runner.invoke(
         entrypoint,
         ["--loader", "my.custom.loader", "--loader-kwarg", "baz=qux"],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_and_kwarg_shorthand(cli_runner):
+def test_entrypoint__custom_loader_and_kwarg_shorthand(cli_runner, import_module):
     result = cli_runner.invoke(
-        entrypoint, ["--loader", "my.custom.loader", "-lk", "baz=qux"]
+        entrypoint,
+        ["--loader", "my.custom.loader", "-lk", "baz=qux"],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__custom_loader_and_multiple_kwargs(cli_runner):
+def test_entrypoint__custom_loader_and_multiple_kwargs(cli_runner, import_module):
     result = cli_runner.invoke(
         entrypoint,
         [
@@ -138,18 +161,21 @@ def test_entrypoint__custom_loader_and_multiple_kwargs(cli_runner):
             "--loader-kwarg",
             "baz=qux",
         ],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
 
 
-def test_entrypoint__loader_kwargs_without_custom_loader(cli_runner):
-    result = cli_runner.invoke(entrypoint, ["--loader-kwarg", "baz=qux"])
+def test_entrypoint__loader_kwargs_without_custom_loader(cli_runner, import_module):
+    result = cli_runner.invoke(
+        entrypoint, ["--loader-kwarg", "baz=qux"], catch_exceptions=False
+    )
 
     assert result.exit_code == 1
 
 
-def test_entrypoint__loader_with_arg_and_kwarg(cli_runner):
+def test_entrypoint__loader_with_arg_and_kwarg(cli_runner, import_module):
     result = cli_runner.invoke(
         entrypoint,
         [
@@ -160,6 +186,7 @@ def test_entrypoint__loader_with_arg_and_kwarg(cli_runner):
             "--loader-kwarg",
             "baz=qux",
         ],
+        catch_exceptions=False,
     )
 
     assert result.exit_code == 0
