@@ -1,6 +1,5 @@
 import copy
 import logging
-from importlib import import_module
 from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
 
@@ -8,7 +7,7 @@ import click
 
 from little_cheesemonger._constants import DEFAULT_CONFIGURATION
 from little_cheesemonger._errors import LittleCheesemongerError
-from little_cheesemonger._loader import default_loader
+from little_cheesemonger._loader import default_loader, import_loader_function
 from little_cheesemonger._run import run
 from little_cheesemonger._types import ConfigurationType
 
@@ -56,7 +55,7 @@ def entrypoint(
 
         if loader_import_path is not None:
 
-            loader = import_function(loader_import_path)
+            loader = import_loader_function(loader_import_path)
             loader_kwargs = process_kwargs(loader_kwargs_raw)
 
             try:
@@ -88,27 +87,3 @@ def process_kwargs(raw_kwargs: Tuple[str, ...]) -> Dict[str, str]:
         kwargs[key] = value
 
     return kwargs
-
-
-def import_function(import_path: str) -> Callable:
-
-    try:
-        *module_path, function_name = import_path.split(".")
-    except ValueError as e:
-        raise LittleCheesemongerError(
-            f"Unable to parse loader path `{import_path}`: {e}"
-        )
-
-    try:
-        module = import_module(".".join(module_path))
-    except ModuleNotFoundError as e:
-        raise LittleCheesemongerError(f"Error importing module `{module_path}`: {e}")
-
-    try:
-        function = getattr(module, function_name)
-    except AttributeError as e:
-        raise LittleCheesemongerError(
-            f"Error importing function `{function_name}` from module `{module_path}`: {e}`"
-        )
-
-    return function

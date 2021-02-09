@@ -1,6 +1,8 @@
 import copy
 import logging
+from importlib import import_module
 from pathlib import Path
+from typing import Callable
 
 from toml import TomlDecodeError
 from toml import load as load_toml
@@ -45,3 +47,29 @@ def default_loader(directory: Path) -> ConfigurationType:
     configuration.update(package_data)
 
     return configuration
+
+
+def import_loader_function(import_path: str) -> Callable:
+
+    try:
+        *module_path, function_name = import_path.split(".")
+        if not module_path:
+            raise ValueError("Module path cannot be empty")
+    except ValueError as e:
+        raise LittleCheesemongerError(
+            f"Unable to parse loader path `{import_path}`: {e}"
+        )
+
+    try:
+        module = import_module(".".join(module_path))
+    except ModuleNotFoundError as e:
+        raise LittleCheesemongerError(f"Error importing module `{module_path}`: {e}")
+
+    try:
+        function = getattr(module, function_name)
+    except AttributeError as e:
+        raise LittleCheesemongerError(
+            f"Error importing function `{function_name}` from module `{module_path}`: {e}`"
+        )
+
+    return function
