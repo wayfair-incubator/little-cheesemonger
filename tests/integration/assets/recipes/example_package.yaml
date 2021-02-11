@@ -1,0 +1,13 @@
+name: example_package
+versions:
+  1:
+    package_versions:
+      - 1.0.0
+    bash_commands:
+      - touch /foobar.txt
+    environment_variables:
+      - FOO=BAR
+    system_dependencies:
+      - atlas
+    python_package_dependencies:
+      - nyancat==0.1.2
