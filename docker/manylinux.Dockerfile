@@ -8,6 +8,6 @@ WORKDIR /app
 RUN /opt/python/cp38-cp38/bin/pip install -r requirements.txt -r requirements-test.txt
 
 # pyyaml required by custom loader
-RUN /opt/python/cp38-cp38/bin/pip
+RUN /opt/python/cp38-cp38/bin/pip install pyyaml==5.4.1
 
 RUN /opt/python/cp38-cp38/bin/pip install -e .
