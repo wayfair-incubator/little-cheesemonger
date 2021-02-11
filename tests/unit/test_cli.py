@@ -7,14 +7,14 @@ from little_cheesemonger._cli import entrypoint, process_kwargs
 from little_cheesemonger._errors import LittleCheesemongerError
 
 
-@pytest.fixture(autouse=True)
-def log_level(caplog):
-    caplog.set_level(logging.DEBUG)
-
-
 @pytest.fixture()
 def cli_runner():
     return CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def log_level(caplog):
+    caplog.set_level(logging.DEBUG)
 
 
 @pytest.fixture
@@ -223,7 +223,3 @@ def test_entrypoint__custom_loader_error__exit_1_and_log_error(
 
     assert result.exit_code == 1
     assert "Error executing loader" in caplog.text
-
-
-def test_entrypoint__default_loader__configuration_loaded_and_applied():
-    pass
