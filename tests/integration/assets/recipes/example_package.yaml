@@ -11,4 +11,3 @@ versions:
       - atlas
     python_package_dependencies:
       - nyancat==0.1.2
-  

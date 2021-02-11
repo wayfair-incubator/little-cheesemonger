@@ -7,7 +7,7 @@ from little_cheesemonger._cli import entrypoint, process_kwargs
 from little_cheesemonger._errors import LittleCheesemongerError
 
 
-@pytest.fixture()
+@pytest.fixture
 def cli_runner():
     return CliRunner()
 
