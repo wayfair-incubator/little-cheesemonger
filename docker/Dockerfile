@@ -1,5 +1,5 @@
-ARG IMAGE_TAG=3.8-buster
-FROM python:${IMAGE_TAG}
+ARG IMAGE=python:3.8-buster
+FROM ${IMAGE}
 
 RUN pip install --upgrade pip wheel setuptools
 

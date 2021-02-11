@@ -69,6 +69,6 @@ def run_subprocess(command: List[str]) -> None:
     """Run subprocess."""
 
     try:
-        subprocess.run(command, check=True, shell=True)  # nosec
+        subprocess.run(" ".join(command), check=True, shell=True)  # nosec
     except subprocess.CalledProcessError as e:
         raise LittleCheesemongerError(f"Subprocess error: {e.stderr}")

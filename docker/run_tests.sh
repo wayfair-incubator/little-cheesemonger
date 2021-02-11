@@ -35,7 +35,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # only generate html locally
-pytest tests --cov-report html
+pytest tests/unit --cov-report html
 
 echo "Running MyPy..."
 mypy little_cheesemonger tests

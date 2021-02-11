@@ -16,7 +16,7 @@ services:
   # Devbox
   
   dev: &dev
-    build: &default_build
+    build: &dev_build
       dockerfile: ./docker/Dockerfile
       context: .
     image: little-cheesemonger-dev
@@ -29,26 +29,68 @@ services:
   test-36:
     <<: *dev
     build:
-      <<: *default_build
+      <<: *dev_build
       args:
-        <<: *build_args_36
+        IMAGE: python:3.6-buster
     image: little-cheesemonger-test-36
     command: docker/run_tests.sh
   
   test-37:
     <<: *dev
     build:
-      <<: *default_build
+      <<: *dev_build
       args:
-        <<: *build_args_37
+        IMAGE: python:3.7-buster
     image: little-cheesemonger-test-37
     command: docker/run_tests.sh
   
+  # NOTE: test-38 command includes `--format-code` option that will
+  # apply changes when the lint suite is run
   test-38:
     <<: *dev
     build:
-      <<: *default_build
+      <<: *dev_build
       args:
-        <<: *build_args_38
+        IMAGE: python:3.8-buster
     image: little-cheesemonger-test-38
     command: docker/run_tests.sh --format-code
+  
+  test-integration-manylinux1-default-loader: &test_integration
+    build: &test_build
+      dockerfile: ./docker/manylinux.Dockerfile
+      context: .
+      args:
+        IMAGE: quay.io/pypa/manylinux1_x86_64
+    image: little-cheesemonger-integration-test-manylinux1
+    command: /opt/python/cp38-cp38/bin/python -m pytest tests/integration/test_default_loader.py
+    working_dir: /app
+    volumes:
+      - ./:/app
+  
+  test-integration-manylinux1-custom-loader:
+    <<: *test_integration
+    command: /opt/python/cp38-cp38/bin/python -m pytest tests/integration/test_custom_loader.py
+  
+  test-integration-manylinux2010-default-loader: &test_integration_manylinux2010
+    <<: *test_integration
+    build:
+      <<: *test_build
+      args:
+        IMAGE: quay.io/pypa/manylinux2010_x86_64
+    image: little-cheesemonger-integration-test-manylinux2010
+  
+  test-integration-manylinux2010-custom-loader:
+    <<: *test_integration_manylinux2010
+    command: /opt/python/cp38-cp38/bin/python -m pytest tests/integration/test_custom_loader.py
+  
+  test-integration-manylinux2014-default-loader: &test_integration_manylinux2014
+    <<: *test_integration
+    build:
+      <<: *test_build
+      args:
+        IMAGE: quay.io/pypa/manylinux2014_x86_64
+    image: little-cheesemonger-integration-test-manylinux2010
+
+  test-integration-manylinux2014-custom-loader:
+    <<: *test_integration_manylinux2014
+    command: /opt/python/cp38-cp38/bin/python -m pytest tests/integration/test_custom_loader.py

@@ -1,0 +1,41 @@
+[tool.little-cheesemonger.manylinux1_x86_64]
+environment_variables = [
+  "FOO=BAR"
+]
+system_dependencies = [
+  "atlas"
+]
+python_dependencies = [
+  "nyancat==0.1.2"
+]
+steps = [
+  "touch /foobar.txt"
+]
+
+[tool.little-cheesemonger.manylinux2010_x86_64]
+environment_variables = [
+  "FOO=BAR"
+]
+system_dependencies = [
+  "atlas"
+]
+python_dependencies = [
+  "nyancat==0.1.2"
+]
+steps = [
+  "touch /foobar.txt"
+]
+
+[tool.little-cheesemonger.manylinux2014_x86_64]
+environment_variables = [
+  "FOO=BAR"
+]
+system_dependencies = [
+  "atlas"
+]
+python_dependencies = [
+  "nyancat==0.1.2"
+]
+steps = [
+  "touch /foobar.txt"
+]

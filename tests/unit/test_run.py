@@ -229,7 +229,7 @@ def test_run_subprocess__subprocess_called_with_command(subprocess_run_mock):
 
     command = "command"
 
-    run_subprocess(command)
+    run_subprocess([command])
 
     subprocess_run_mock.assert_called_once_with(command, check=True, shell=True)
 
