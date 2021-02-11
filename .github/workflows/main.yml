@@ -108,7 +108,7 @@ jobs:
             test-requirements: "true"
 
         - name: Run pytest
-          run: pytest --cov-report xml:coverage-${{ matrix.python-version }}.xml --junitxml=test-results-${{ matrix.python-version }}.xml
+          run: pytest tests/unit --cov-report xml:coverage-${{ matrix.python-version }}.xml --junitxml=test-results-${{ matrix.python-version }}.xml
 
         - name: Upload pytest test results artifact
           uses: actions/upload-artifact@v2
