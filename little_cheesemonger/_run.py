@@ -1,17 +1,32 @@
 import logging
 import os
 import subprocess  # nosec
-from typing import List
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 from little_cheesemonger._errors import LittleCheesemongerError
+from little_cheesemonger._loader import load_configuration
 from little_cheesemonger._platform import get_python_binaries
 from little_cheesemonger._types import ConfigurationType
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
-def run(configuration: ConfigurationType) -> None:
+def run(
+    directory: Path,
+    loader_import_path: Optional[str],
+    loader_args: Tuple[str, ...],
+    loader_kwargs: Dict[str, str],
+    debug: bool,
+) -> None:
     """Run build environment setup per configuration."""
+
+    logging.basicConfig()
+    logging.getLogger("little_cheesemonger").setLevel("DEBUG" if debug else "INFO")
+
+    configuration: ConfigurationType = load_configuration(
+        directory, loader_import_path, loader_args, loader_kwargs
+    )
 
     if configuration["environment_variables"] is not None:
         set_environment_variables(configuration["environment_variables"])

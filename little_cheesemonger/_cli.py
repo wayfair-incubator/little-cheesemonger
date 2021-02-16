@@ -1,17 +1,13 @@
-import copy
 import logging
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import click
 
-from little_cheesemonger._constants import DEFAULT_CONFIGURATION
 from little_cheesemonger._errors import LittleCheesemongerError
-from little_cheesemonger._loader import default_loader, import_loader_function
 from little_cheesemonger._run import run
-from little_cheesemonger._types import ConfigurationType
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @click.command()
@@ -41,9 +37,6 @@ def entrypoint(
     :raises LittleCheesemongerError: Loader arguments are set without a custom loader.
     """
 
-    logging.basicConfig()
-    logging.getLogger("little_cheesemonger").setLevel("DEBUG" if debug else "INFO")
-
     try:
 
         if (loader_args or loader_kwargs_raw) and loader_import_path is None:
@@ -51,25 +44,16 @@ def entrypoint(
                 "Additional loader arguments can only be used with a custom loader."
             )
 
-        configuration: ConfigurationType = copy.copy(DEFAULT_CONFIGURATION)
-
-        if loader_import_path is not None:
-
-            loader = import_loader_function(loader_import_path)
-            loader_kwargs = process_kwargs(loader_kwargs_raw)
-
-            try:
-                configuration = loader(directory, *loader_args, **loader_kwargs)
-            except Exception as e:
-                raise LittleCheesemongerError(f"Error executing loader `{loader}`: {e}")
-
-        else:
-            configuration = default_loader(directory)
-
-        run(configuration)
+        run(
+            directory,
+            loader_import_path,
+            loader_args,
+            process_kwargs(loader_kwargs_raw),
+            debug,
+        )
 
     except LittleCheesemongerError as e:
-        LOGGER.exception(e) if debug else LOGGER.error(e)
+        logger.exception(e) if debug else logger.error(e)
         exit(1)
 
 

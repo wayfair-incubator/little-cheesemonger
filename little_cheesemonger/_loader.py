@@ -2,7 +2,7 @@ import copy
 import logging
 from importlib import import_module
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Dict, Optional, Tuple
 
 from toml import TomlDecodeError
 from toml import load as load_toml
@@ -73,3 +73,28 @@ def import_loader_function(import_path: str) -> Callable:
         )
 
     return function
+
+
+def load_configuration(
+    directory: Path,
+    loader_import_path: Optional[str],
+    loader_args: Tuple[str, ...],
+    loader_kwargs: Dict[str, str],
+) -> ConfigurationType:
+
+    configuration: ConfigurationType = copy.copy(DEFAULT_CONFIGURATION)
+
+    if loader_import_path is not None:
+        loader = import_loader_function(loader_import_path)
+
+        try:
+            loaded_configuration = loader(directory, *loader_args, **loader_kwargs)
+        except Exception as e:
+            raise LittleCheesemongerError(f"Error executing loader `{loader}`: {e}")
+
+    else:
+        loaded_configuration = default_loader(directory)
+
+    configuration.update(loaded_configuration)
+
+    return configuration
