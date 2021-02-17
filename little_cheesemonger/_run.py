@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess  # nosec
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import load_configuration
@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 def run(
     directory: Path,
     loader_import_path: Optional[str],
-    loader_args: Tuple[str, ...],
-    loader_kwargs: Dict[str, str],
+    loader_args: Tuple[Any, ...],
+    loader_kwargs: Dict[str, Any],
     debug: bool,
 ) -> None:
     """Run build environment setup per configuration."""
