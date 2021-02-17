@@ -1,4 +1,5 @@
 import copy
+import logging
 import subprocess
 
 import pytest
@@ -12,18 +13,23 @@ from little_cheesemonger._run import (
     run_subprocess,
     set_environment_variables,
 )
-from tests.constants import ARCHITECTURE, PLATFORM, PYTHON_BINARIES, PYTHON_VERSION
+from tests.constants import (
+    ARCHITECTURE,
+    CONFIGURATION,
+    DIRECTORY,
+    ENVIRONMENT_VARIABLES,
+    LOADER_ARGS,
+    LOADER_IMPORT_PATH,
+    LOADER_KWARGS,
+    PLATFORM,
+    PYTHON_BINARIES,
+    PYTHON_DEPENDENCIES,
+    PYTHON_VERSION,
+    STEPS,
+    SYSTEM_DEPENDENCIES,
+)
 
-ENVIRONMENT_VARIABLES = ["foo=bar"]
-SYSTEM_DEPENDENCIES = ["foo-1.0.0"]
-PYTHON_DEPENDENCIES = ["foo==1.0.0"]
-STEPS = ["foo"]
-CONFIGURATION = {
-    "environment_variables": ENVIRONMENT_VARIABLES,
-    "system_dependencies": SYSTEM_DEPENDENCIES,
-    "python_dependencies": PYTHON_DEPENDENCIES,
-    "steps": STEPS,
-}
+DEBUG = False
 
 
 @pytest.fixture
@@ -52,6 +58,13 @@ def run_subprocess_mock(mocker):
 
 
 @pytest.fixture
+def load_configuration(mocker):
+    return mocker.patch(
+        "little_cheesemonger._run.load_configuration", return_value=CONFIGURATION
+    )
+
+
+@pytest.fixture
 def get_python_binaries(mocker):
     return mocker.patch(
         "little_cheesemonger._run.get_python_binaries",
@@ -69,14 +82,41 @@ def subprocess_run_mock(mocker):
     return mocker.patch("subprocess.run")
 
 
+def test_run__debug_is_False__log_level_set_to_INFO(
+    set_environment_variables_mock,
+    install_system_dependencies_mock,
+    install_python_dependencies_mock,
+    execute_steps_mock,
+    load_configuration,
+):
+
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
+
+    assert logging.getLogger("little_cheesemonger").level == logging.INFO
+
+
+def test_run__debug_is_True__log_level_set_to_DEBUG(
+    set_environment_variables_mock,
+    install_system_dependencies_mock,
+    install_python_dependencies_mock,
+    execute_steps_mock,
+    load_configuration,
+):
+
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, True)
+
+    assert logging.getLogger("little_cheesemonger").level == logging.DEBUG
+
+
 def test_run__environment_variables_set_in_configuration__set_environment_variables_called(
     set_environment_variables_mock,
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
-    run(CONFIGURATION)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     set_environment_variables_mock.assert_called_once_with(ENVIRONMENT_VARIABLES)
 
@@ -86,12 +126,14 @@ def test_run__environment_variables_not_set_in_configuration__set_environment_va
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
     configuration["environment_variables"] = None
+    load_configuration.return_value = configuration
 
-    run(configuration)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     set_environment_variables_mock.assert_not_called()
 
@@ -101,9 +143,10 @@ def test_run__system_dependencies_set_in_configuration__install_system_dependenc
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
-    run(CONFIGURATION)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     install_system_dependencies_mock.assert_called_once_with(SYSTEM_DEPENDENCIES)
 
@@ -113,12 +156,14 @@ def test_run__system_dependencies_not_set_in_configuration__install_system_depen
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
     configuration["system_dependencies"] = None
+    load_configuration.return_value = configuration
 
-    run(configuration)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     install_system_dependencies_mock.assert_not_called()
 
@@ -128,9 +173,10 @@ def test_run__python_dependencies_set_in_configuration__install_python_dependenc
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
-    run(CONFIGURATION)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     install_python_dependencies_mock.assert_called_once_with(PYTHON_DEPENDENCIES)
 
@@ -140,12 +186,14 @@ def test_run__python_dependencies_not_set_in_configuration__install_python_depen
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
     configuration["python_dependencies"] = None
+    load_configuration.return_value = configuration
 
-    run(configuration)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     install_python_dependencies_mock.assert_not_called()
 
@@ -155,9 +203,10 @@ def test_run__steps_set_in_configuration__execute_steps_called(
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
-    run(CONFIGURATION)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     execute_steps_mock.assert_called_once_with(STEPS)
 
@@ -167,12 +216,14 @@ def test_run__steps_not_set_in_configuration__execute_steps_not_called(
     install_system_dependencies_mock,
     install_python_dependencies_mock,
     execute_steps_mock,
+    load_configuration,
 ):
 
     configuration = copy.deepcopy(CONFIGURATION)
     configuration["steps"] = None
+    load_configuration.return_value = configuration
 
-    run(configuration)
+    run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
     execute_steps_mock.assert_not_called()
 
