@@ -77,14 +77,16 @@ def install_python_dependencies(
     all_binaries = get_python_binaries()
 
     if python_versions is None:
-        binaries_paths = list(all_binaries.values()) # NOTE: cast to list for mypy, fix this
+        binaries_paths = list(
+            all_binaries.values()
+        )  # NOTE: cast to list for mypy, fix this
     else:
         try:
             version_keys = [PythonVersion[version] for version in python_versions]
             binaries_paths = [all_binaries[version] for version in version_keys]
         except KeyError as e:
             raise LittleCheesemongerError(
-                f"A Python version from specified versions {versions} is not installed on this image: {e}"
+                f"A Python version from specified versions {python_versions} is not installed on this image: {e}"
             )
 
     for binaries in binaries_paths:

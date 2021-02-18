@@ -278,6 +278,16 @@ def test_install_python_dependencies__python_versions_set__run_subprocess_called
     )
 
 
+def test_install_python_dependencies__python_versions_invalid__raise_LittleCheesemongerError(
+    run_subprocess_mock, get_python_binaries
+):
+
+    with pytest.raises(
+        LittleCheesemongerError, match=r"A Python version from specified versions .*"
+    ):
+        install_python_dependencies(PYTHON_DEPENDENCIES, ["invalid"])
+
+
 def test_install_python_dependencies__python_versions_not_set__run_subprocess_called_with_command(
     run_subprocess_mock, get_python_binaries
 ):
