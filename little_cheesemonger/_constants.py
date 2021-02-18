@@ -56,5 +56,6 @@ DEFAULT_CONFIGURATION: ConfigurationType = {
     "environment_variables": None,
     "system_dependencies": None,
     "python_dependencies": None,
+    "python_versions": None,
     "steps": None,
 }
