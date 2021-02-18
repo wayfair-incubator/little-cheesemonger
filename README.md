@@ -56,7 +56,7 @@ You can pass the path to an importable function, as well as positional and keywo
 little-cheesemonger --data-loader path.to.function --loader-arg foo --loader-kwarg foo=bar
 ``` 
 
-Custom data loader functions must accept `directory` as the first argument with positional and keyword arguments passed to the loader function coming after. The function must return a dictionary of configuration data matching the fields above. 
+Custom data loader functions must accept `directory` as the first argument with positional and keyword arguments passed to the loader function after. The function must return a dictionary of configuration data matching the fields above. 
 
 ```python
 def my_custom_loader(directory: Path, ...) -> Dict:
