@@ -70,7 +70,7 @@ def install_system_dependencies(dependencies: List[str]) -> None:
 
 
 def install_python_dependencies(
-    dependencies: List[str], python_versions: Optional[List[str]]
+    dependencies: List[str], python_versions: Optional[List[str]] = None
 ) -> None:
     """Install Python dependencies."""
 
