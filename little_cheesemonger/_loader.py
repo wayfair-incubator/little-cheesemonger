@@ -2,7 +2,7 @@ import copy
 import logging
 from importlib import import_module
 from pathlib import Path
-from typing import Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, Optional, Tuple
 
 from toml import TomlDecodeError
 from toml import load as load_toml
@@ -78,8 +78,8 @@ def import_loader_function(import_path: str) -> Callable:
 def load_configuration(
     directory: Path,
     loader_import_path: Optional[str],
-    loader_args: Tuple[str, ...],
-    loader_kwargs: Dict[str, str],
+    loader_args: Tuple[Any, ...],
+    loader_kwargs: Dict[str, Any],
 ) -> ConfigurationType:
 
     configuration: ConfigurationType = copy.copy(DEFAULT_CONFIGURATION)
