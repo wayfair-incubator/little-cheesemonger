@@ -33,6 +33,10 @@ system_dependencies = [
 python_dependencies = [
   "nyancat==0.1.2"
 ]
+python_versions = [
+  "cp36-cp36m"
+  "cp38-cp38"
+]
 steps = [
   "touch /foobar.txt"
 ]
@@ -45,6 +49,10 @@ They are expected to be in `package-version` format.
 * `python_dependencies` is a list of Python dependencies to install via `pip`. They 
 are expected to be in `package==version` format. They are currently installed for 
 all available versions of Python in a given manylinux image.
+* `python_versions` is a list of Python versions to install Python dependencies for 
+in a given manylinux image. They are expected to follow the Python installation directory 
+naming convention from in the specified manyliniux image, ex. `cp36-cp36m`. Python version names 
+can be found by running `ls /opt/python` in a manylinux image.
 * `steps` is a list of steps to execute via bash. Package building and uploading could 
 be implemented here, or `little-cheesemonger` could be integrated into a larger system!
 
