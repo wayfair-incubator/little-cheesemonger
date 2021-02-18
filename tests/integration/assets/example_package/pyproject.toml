@@ -5,6 +5,12 @@ environment_variables = [
 system_dependencies = [
   "atlas"
 ]
+python_versions = [
+  "cp36-cp36m",
+  "cp36-cp37m",
+  "cp36-cp38",
+  "cp36-cp39"
+]
 python_dependencies = [
   "nyancat==0.1.2"
 ]
@@ -19,6 +25,12 @@ environment_variables = [
 system_dependencies = [
   "atlas"
 ]
+python_versions = [
+  "cp36-cp36m",
+  "cp36-cp37m",
+  "cp36-cp38",
+  "cp36-cp39"
+]
 python_dependencies = [
   "nyancat==0.1.2"
 ]
@@ -32,6 +44,12 @@ environment_variables = [
 ]
 system_dependencies = [
   "atlas"
+]
+python_versions = [
+  "cp36-cp36m",
+  "cp36-cp37m",
+  "cp36-cp38",
+  "cp36-cp39"
 ]
 python_dependencies = [
   "nyancat==0.1.2"

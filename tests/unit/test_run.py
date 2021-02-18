@@ -25,9 +25,11 @@ from tests.constants import (
     PYTHON_BINARIES,
     PYTHON_DEPENDENCIES,
     PYTHON_VERSION,
+    PYTHON_VERSIONS,
     STEPS,
     SYSTEM_DEPENDENCIES,
 )
+from tests.constants import PythonVersion as PythonVersionTesting
 
 DEBUG = False
 
@@ -70,6 +72,11 @@ def get_python_binaries(mocker):
         "little_cheesemonger._run.get_python_binaries",
         return_value=PYTHON_BINARIES[ARCHITECTURE][PLATFORM],
     )
+
+
+@pytest.fixture(autouse=True)
+def python_versions_enum(mocker):
+    return mocker.patch("little_cheesemonger._run.PythonVersion", PythonVersionTesting)
 
 
 @pytest.fixture
@@ -178,7 +185,9 @@ def test_run__python_dependencies_set_in_configuration__install_python_dependenc
 
     run(DIRECTORY, LOADER_IMPORT_PATH, LOADER_ARGS, LOADER_KWARGS, DEBUG)
 
-    install_python_dependencies_mock.assert_called_once_with(PYTHON_DEPENDENCIES)
+    install_python_dependencies_mock.assert_called_once_with(
+        PYTHON_DEPENDENCIES, PYTHON_VERSIONS
+    )
 
 
 def test_run__python_dependencies_not_set_in_configuration__install_python_dependencies_not_called(
@@ -254,11 +263,36 @@ def test_install_system_dependencies__run_subprocess_called_with_command(
     )
 
 
-def test_install_python_dependencies__run_subprocess_called_with_command(
+def test_install_python_dependencies__python_versions_set__run_subprocess_called_with_command(
     run_subprocess_mock, get_python_binaries
 ):
 
-    install_python_dependencies(PYTHON_DEPENDENCIES)
+    install_python_dependencies(PYTHON_DEPENDENCIES, PYTHON_VERSIONS)
+
+    run_subprocess_mock.assert_called_once_with(
+        [
+            str(PYTHON_BINARIES[ARCHITECTURE][PLATFORM][PYTHON_VERSION] / "pip"),
+            "install",
+        ]
+        + PYTHON_DEPENDENCIES
+    )
+
+
+def test_install_python_dependencies__python_versions_invalid__raise_LittleCheesemongerError(
+    run_subprocess_mock, get_python_binaries
+):
+
+    with pytest.raises(
+        LittleCheesemongerError, match=r"A Python version from specified versions .*"
+    ):
+        install_python_dependencies(PYTHON_DEPENDENCIES, ["invalid"])
+
+
+def test_install_python_dependencies__python_versions_not_set__run_subprocess_called_with_command(
+    run_subprocess_mock, get_python_binaries
+):
+
+    install_python_dependencies(PYTHON_DEPENDENCIES, None)
 
     run_subprocess_mock.assert_called_once_with(
         [

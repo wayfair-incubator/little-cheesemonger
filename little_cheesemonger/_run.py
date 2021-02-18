@@ -4,6 +4,7 @@ import subprocess  # nosec
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from little_cheesemonger._constants import PythonVersion
 from little_cheesemonger._errors import LittleCheesemongerError
 from little_cheesemonger._loader import load_configuration
 from little_cheesemonger._platform import get_python_binaries
@@ -35,7 +36,9 @@ def run(
         install_system_dependencies(configuration["system_dependencies"])
 
     if configuration["python_dependencies"] is not None:
-        install_python_dependencies(configuration["python_dependencies"])
+        install_python_dependencies(
+            configuration["python_dependencies"], configuration["python_versions"]
+        )
 
     if configuration["steps"] is not None:
         execute_steps(configuration["steps"])
@@ -66,10 +69,27 @@ def install_system_dependencies(dependencies: List[str]) -> None:
     run_subprocess(["yum", "install", "-y"] + dependencies)
 
 
-def install_python_dependencies(dependencies: List[str]) -> None:
+def install_python_dependencies(
+    dependencies: List[str], python_versions: Optional[List[str]] = None
+) -> None:
     """Install Python dependencies."""
 
-    for binaries in get_python_binaries().values():
+    all_binaries = get_python_binaries()
+
+    if python_versions is None:
+        binaries_paths = list(
+            all_binaries.values()
+        )  # NOTE: cast to list for mypy, fix this
+    else:
+        try:
+            version_keys = [PythonVersion[version] for version in python_versions]
+            binaries_paths = [all_binaries[version] for version in version_keys]
+        except KeyError as e:
+            raise LittleCheesemongerError(
+                f"A Python version from specified versions {python_versions} is not installed on this image: {e}"
+            )
+
+    for binaries in binaries_paths:
         run_subprocess([str(binaries / "pip"), "install"] + dependencies)
 
 
