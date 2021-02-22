@@ -1,5 +1,5 @@
 ---
-name: "\U0001F41B Bug report"
+name: "\U0001F41B Bug Report"
 about: Create a report to help us improve
 title: ''
 labels: bug
@@ -32,12 +32,13 @@ assignees: ''
 1.
 1.
 1.
-1.
 
 ### Context (Environment)
+
  - OS [e.g. Windows 10]: 
 - Python version: 
 - `little-cheesemonger` version: 
 
 ### Possible Solution
+
 <!-- Not obligatory but suggest a fix/reason for the bug. -->
