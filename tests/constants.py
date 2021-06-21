@@ -1,28 +1,28 @@
 from enum import Enum
 from pathlib import Path
 
-PLATFORM = "platform"
-ARCHITECTURE = "architecture"
-PYTHON_VERSION = "foo38"
+PLATFORM = "PLATFORM"
+ARCHITECTURE = "ARCHITECTURE"
+PYTHON_VERSION = "FOO38"
 PYTHON_BINARIES_PATH = Path("foo/bar")
 PLATFORM_RAW = f"{PLATFORM}_{ARCHITECTURE}"
 
 
 class Architecture(str, Enum):
-    architecture = ARCHITECTURE
+    ARCHITECTURE = ARCHITECTURE
 
 
 class Platform(str, Enum):
-    platform = PLATFORM
+    PLATFORM = PLATFORM
 
 
 class PythonVersion(str, Enum):
-    foo38 = PYTHON_VERSION
+    FOO38 = PYTHON_VERSION
 
 
 PYTHON_BINARIES = {
-    Architecture.architecture: {
-        Platform.platform: {PythonVersion.foo38: PYTHON_BINARIES_PATH}
+    Architecture.ARCHITECTURE: {
+        Platform.PLATFORM: {PythonVersion.FOO38: PYTHON_BINARIES_PATH}
     }
 }
 

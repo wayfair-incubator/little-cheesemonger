@@ -55,7 +55,7 @@ def test_get_python_binaries__return_binaries_for_architecture_and_platform(
 
     assert (
         get_python_binaries()
-        == PYTHON_BINARIES[Architecture.architecture][Platform.platform]
+        == PYTHON_BINARIES[Architecture.ARCHITECTURE][Platform.PLATFORM]
     )
 
 
