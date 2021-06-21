@@ -1,13 +1,12 @@
+<p align="center">
+  <img width="300" height="300" src="logo.svg" alt="cheese chef">
+</p>
+
 # little-cheesemonger
 
 `little-cheesemonger` is a package that can set up a manylinux build environment to compile a 
 correctly linked manylinux wheel. Configuration data is loaded from a `pyproject.toml` file, or 
 a custom data loader can be implemented.
-
-
-<p align="center">
-  <img width="300" height="300" src="logo.svg">
-</p>
 
 ## Installation
 
