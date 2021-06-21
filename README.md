@@ -4,6 +4,11 @@
 correctly linked manylinux wheel. Configuration data is loaded from a `pyproject.toml` file, or 
 a custom data loader can be implemented.
 
+
+<p align="center">
+  <img width="300" height="300" src="logo.svg">
+</p>
+
 ## Installation
 
 ```bash
