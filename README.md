@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="300" height="300" src="logo.svg" alt="cheese chef">
+</p>
+
 # little-cheesemonger
 
 `little-cheesemonger` is a package that can set up a manylinux build environment to compile a 
