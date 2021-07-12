@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Uppercase Enum keys
 * Expand `click` version range to `click>=7.1,<9`
 
 ## [0.1.0] - 2021-02-18
