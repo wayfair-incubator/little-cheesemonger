@@ -255,16 +255,6 @@ def test_install_system_dependencies__run_subprocess_called_with_command(
     )
 
 
-def test_install_python_dependencies__python_versions_invalid__raise_LittleCheesemongerError(
-    run_subprocess_mock, get_python_binaries
-):
-
-    with pytest.raises(
-        LittleCheesemongerError, match=r"A Python version from specified versions .*"
-    ):
-        install_python_dependencies(PYTHON_DEPENDENCIES, ["invalid"])
-
-
 def test_install_python_dependencies__succeeds_when_no_python_versions_provided(
     run_subprocess_mock, get_python_binaries
 ):
@@ -291,7 +281,7 @@ def test_install_python_dependencies__succeeds_when_no_python_versions_provided(
 def test_install_python_dependencies__succeeds_when_python_versions_are_correctly_specified(
     run_subprocess_mock, get_python_binaries
 ):
-    install_python_dependencies(PYTHON_DEPENDENCIES, ["CP37_CP37M"])
+    install_python_dependencies(PYTHON_DEPENDENCIES, ["cp37-cp37m"])
 
     run_subprocess_mock.assert_called_once_with(
         [
@@ -307,22 +297,22 @@ def test_install_python_dependencies__succeeds_when_python_versions_are_correctl
     )
 
 
-def test_install_python_dependencies__fails_with_lowercase_python_version__raise_LittleCheesemongerError(
+def test_install_python_dependencies__fails_with_uppercase_python_version__raise_LittleCheesemongerError(
     run_subprocess_mock, get_python_binaries
 ):
     with pytest.raises(
-        LittleCheesemongerError, match=r"A Python version from specified versions .*"
+        ValueError, match=r"'CP37_CP37M' is not a valid PythonVersion.*"
+    ):
+        install_python_dependencies(PYTHON_DEPENDENCIES, ["CP37_CP37M"])
+
+
+def test_install_python_dependencies__fails_with_underscore_in_python_version__raise_LittleCheesemongerError(
+    run_subprocess_mock, get_python_binaries
+):
+    with pytest.raises(
+        ValueError, match=r"'cp37_cp37m' is not a valid PythonVersion.*"
     ):
         install_python_dependencies(PYTHON_DEPENDENCIES, ["cp37_cp37m"])
-
-
-def test_install_python_dependencies__fails_with_dashes_in_python_version__raise_LittleCheesemongerError(
-    run_subprocess_mock, get_python_binaries
-):
-    with pytest.raises(
-        LittleCheesemongerError, match=r"A Python version from specified versions .*"
-    ):
-        install_python_dependencies(PYTHON_DEPENDENCIES, ["cp37-cp37m"])
 
 
 def test_execute_steps__run_subprocess_called_with_commands(run_subprocess_mock):
