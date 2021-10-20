@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 * Bug preventing Python binaries from being looked up
+* Bug requiring that python versions be provided in UPPER_SNAKE_CASE (CP38_CP38)
 
 ## [0.2.0] - 2021-10-01
 
