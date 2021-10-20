@@ -84,7 +84,7 @@ def install_python_dependencies(
         try:
             validated_versions = [PythonVersion(version) for version in python_versions]
             binaries_paths = [all_binaries[version] for version in validated_versions]
-        except KeyError as e:
+        except (KeyError, ValueError) as e:
             raise LittleCheesemongerError(
                 f"A Python version from specified versions {python_versions} is not installed on this image: {e}"
             )

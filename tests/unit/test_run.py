@@ -301,7 +301,7 @@ def test_install_python_dependencies__fails_with_uppercase_python_version__raise
     run_subprocess_mock, get_python_binaries
 ):
     with pytest.raises(
-        ValueError, match=r"'CP37_CP37M' is not a valid PythonVersion.*"
+        LittleCheesemongerError, match=r"A Python version from specified versions .*"
     ):
         install_python_dependencies(PYTHON_DEPENDENCIES, ["CP37_CP37M"])
 
@@ -310,7 +310,7 @@ def test_install_python_dependencies__fails_with_underscore_in_python_version__r
     run_subprocess_mock, get_python_binaries
 ):
     with pytest.raises(
-        ValueError, match=r"'cp37_cp37m' is not a valid PythonVersion.*"
+        LittleCheesemongerError, match=r"A Python version from specified versions .*"
     ):
         install_python_dependencies(PYTHON_DEPENDENCIES, ["cp37_cp37m"])
 
