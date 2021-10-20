@@ -67,7 +67,7 @@ def get_python_binaries() -> Dict[PythonVersion, Path]:
     platform, architecture = get_platform().split("_", 1)
 
     try:
-        return PYTHON_BINARIES[Architecture[architecture]][Platform[platform]]
+        return PYTHON_BINARIES[Architecture(architecture)][Platform(platform)]
     except KeyError:
         raise LittleCheesemongerError(
             "No value in PYTHON_BINARIES constant for "
