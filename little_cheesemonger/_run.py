@@ -82,9 +82,9 @@ def install_python_dependencies(
         )  # NOTE: cast to list for mypy, fix this
     else:
         try:
-            version_keys = [PythonVersion[version] for version in python_versions]
-            binaries_paths = [all_binaries[version] for version in version_keys]
-        except KeyError as e:
+            validated_versions = [PythonVersion(version) for version in python_versions]
+            binaries_paths = [all_binaries[version] for version in validated_versions]
+        except (KeyError, ValueError) as e:
             raise LittleCheesemongerError(
                 f"A Python version from specified versions {python_versions} is not installed on this image: {e}"
             )
