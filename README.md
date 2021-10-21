@@ -11,7 +11,7 @@ a custom data loader can be implemented.
 ## Installation
 
 ```bash
-pip install little-cheesemonger==0.2.0
+pip install little-cheesemonger==0.2.1
 ```
 
 ## Quickstart
