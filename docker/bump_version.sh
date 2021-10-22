@@ -63,7 +63,7 @@ CURRENT_STATUS=$(git status --short --untracked-files=no)
 #  echo "A version bump must be run from the default branch."
 #  echo "Run 'git switch ${DEFAULT_BRANCH}'"
 #  exit 2
-elif [[ "$CURRENT_STATUS" != "" ]]; then
+if [[ "$CURRENT_STATUS" != "" ]]; then
   echo "The working tree has uncommitted changes."
   echo "Commit or stash the changes before running a version bump."
   exit 3
