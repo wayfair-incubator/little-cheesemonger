@@ -59,10 +59,10 @@ fi
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 CURRENT_STATUS=$(git status --short --untracked-files=no)
 
-#if [[ "${CURRENT_BRANCH}" != "${DEFAULT_BRANCH}" ]]; then
-#  echo "A version bump must be run from the default branch."
-#  echo "Run 'git switch ${DEFAULT_BRANCH}'"
-#  exit 2
+if [[ "${CURRENT_BRANCH}" != "${DEFAULT_BRANCH}" ]]; then
+  echo "A version bump must be run from the default branch."
+  echo "Run 'git switch ${DEFAULT_BRANCH}'"
+  exit 2
 if [[ "$CURRENT_STATUS" != "" ]]; then
   echo "The working tree has uncommitted changes."
   echo "Commit or stash the changes before running a version bump."
