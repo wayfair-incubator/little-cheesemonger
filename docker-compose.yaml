@@ -11,6 +11,11 @@ x-build-args-37: &build_args_37
 x-build-args-38: &build_args_38
   IMAGE_TAG: "3.8-buster"
 
+x-mount-app-and-user-git-config: &mount-app-and-user-git-config
+  volumes:
+    - ./:/app
+    - ~/.gitconfig:/home/columbo/.gitconfig # allow script to commit as user
+
 services:
 
   # Devbox
@@ -23,6 +28,11 @@ services:
     command: /bin/bash
     volumes:
       - ./:/app
+
+  bump:
+    <<: *dev
+    <<: *mount-app-and-user-git-config
+    entrypoint: /bin/bash docker/bump_version.sh
 
   # Test & Lint suite
   
