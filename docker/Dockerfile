@@ -1,7 +1,7 @@
 ARG IMAGE=python:3.8-buster
 FROM ${IMAGE}
 
-ENV PATH "/home:${PATH}"
+ENV PATH "/home/.local/bin/:${PATH}"
 
 RUN pip install --upgrade pip wheel setuptools
 
