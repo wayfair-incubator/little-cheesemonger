@@ -14,7 +14,6 @@ x-build-args-38: &build_args_38
 x-mount-app-and-user-git-config: &mount-app-and-user-git-config
   volumes:
     - ./:/app
-    - ~/.gitconfig:/home/little-cheesemonger/.gitconfig # allow script to commit as user
 
 services:
 

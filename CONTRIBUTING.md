@@ -21,7 +21,8 @@ Once the package is ready to be released, there are a few things that need to be
 2. Run the version bump script with the appropriate part name (`major`, `minor`, or `patch`).
     Example: `docker-compose run --rm bump minor`
     
-    This wil create a new branch, updates all affected files with the new version, and commit the changes to the branch.
+This wil create a new branch, updates all affected files with the new version, and commit the changes to the branch.
+To do this, it uses the git config available in the `.gitconfig` file in your root directory.
 
 3. Push the new branch to create a new pull request.
 4. Get the pull request approved.
