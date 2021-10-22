@@ -1,7 +1,18 @@
 ARG IMAGE=python:3.8-buster
 FROM ${IMAGE}
 
-ENV PATH "/home/.local/bin/:${PATH}"
+ARG _USER="little-cheesemonger"
+ARG _UID="1001"
+ARG _GID="100"
+ARG _SHELL="/bin/bash"
+
+RUN useradd -m -s "${_SHELL}" -N -u "${_UID}" "${_USER}"
+
+ENV USER ${_USER}
+ENV UID ${_UID}
+ENV GID ${_GID}
+ENV HOME /home/${_USER}
+ENV PATH "${HOME}/.local/bin/:${PATH}"
 
 RUN pip install --upgrade pip wheel setuptools
 
