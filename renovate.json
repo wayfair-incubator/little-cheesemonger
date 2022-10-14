@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate configuration for little-cheesemonger",
+  "extends": [
+    "config:base",
+    ":rebaseStalePrs",
+    ":gitSignOff",
+    "schedule:earlyMondays"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "docker",
+    "pip_requirements",
+    "poetry",
+    "setup_cfg"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": "pip_requirements",
+      "matchFiles": [
+        "requirements.txt",
+        "requirements-test.txt"
+      ]
+    }
+  ]
+}
