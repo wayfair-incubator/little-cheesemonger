@@ -1,7 +1,6 @@
 version: '3.4'
 
 # Defaults
-
 x-build-args-36: &build_args_36
   IMAGE_TAG: "3.6-buster"
 
@@ -10,6 +9,12 @@ x-build-args-37: &build_args_37
 
 x-build-args-38: &build_args_38
   IMAGE_TAG: "3.8-buster"
+
+x-build-args-39: &build_args_39
+  IMAGE_TAG: "3.9-buster"
+
+x-build-args-310: &build_args_310
+  IMAGE_TAG: "3.10-buster"
 
 x-mount-app-and-user-git-config: &mount-app-and-user-git-config
   volumes:
@@ -35,7 +40,7 @@ services:
     entrypoint: /bin/bash docker/bump_version.sh
 
   # Test & Lint suite
-  
+
   test-36:
     <<: *dev
     build:
@@ -44,7 +49,7 @@ services:
         IMAGE: python:3.6-buster
     image: little-cheesemonger-test-36
     command: docker/run_tests.sh
-  
+
   test-37:
     <<: *dev
     build:
@@ -54,8 +59,6 @@ services:
     image: little-cheesemonger-test-37
     command: docker/run_tests.sh
   
-  # NOTE: test-38 command includes `--format-code` option that will
-  # apply changes when the lint suite is run
   test-38:
     <<: *dev
     build:
@@ -63,7 +66,29 @@ services:
       args:
         IMAGE: python:3.8-buster
     image: little-cheesemonger-test-38
+    command: docker/run_tests.sh
+  
+  test-39:
+    <<: *dev
+    build:
+      <<: *dev_build
+      args:
+        IMAGE: python:3.9-buster
+    image: little-cheesemonger-test-39
+    command: docker/run_tests.sh
+
+  # NOTE: test-310 command includes `--format-code` option that will
+  # apply changes when the lint suite is run
+  test-310:
+    <<: *dev
+    build:
+      <<: *dev_build
+      args:
+        IMAGE: python:3.10-buster
+    image: little-cheesemonger-test-310
     command: docker/run_tests.sh --format-code
+  
+  
   
   test-integration-manylinux1-default-loader: &test_integration
     build: &test_build
