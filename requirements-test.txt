@@ -8,5 +8,5 @@ pytest==6.2.5
 pytest-cov==3.0.0
 pytest-mock==3.6.1
 pdbpp==0.10.3
-types-PyYAML==6.0.0
+types-PyYAML==6.0.12
 types-toml==0.10.1
