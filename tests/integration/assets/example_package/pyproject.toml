@@ -9,7 +9,8 @@ python_versions = [
   "cp36-cp36m",
   "cp36-cp37m",
   "cp36-cp38",
-  "cp36-cp39"
+  "cp36-cp39",
+  "cp36-cp310"
 ]
 python_dependencies = [
   "nyancat==0.1.2"
@@ -29,7 +30,8 @@ python_versions = [
   "cp36-cp36m",
   "cp36-cp37m",
   "cp36-cp38",
-  "cp36-cp39"
+  "cp36-cp39",
+  "cp36-cp310"
 ]
 python_dependencies = [
   "nyancat==0.1.2"
@@ -49,7 +51,8 @@ python_versions = [
   "cp36-cp36m",
   "cp36-cp37m",
   "cp36-cp38",
-  "cp36-cp39"
+  "cp36-cp39",
+  "cp36-cp310"
 ]
 python_dependencies = [
   "nyancat==0.1.2"
