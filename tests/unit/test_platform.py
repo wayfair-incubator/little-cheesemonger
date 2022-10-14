@@ -64,4 +64,5 @@ def test_get_python_binaries__return_binaries_for_architecture_and_platform(mock
         PythonVersion.CP37_CP37M: Path("/opt/python/cp37-cp37m/bin"),
         PythonVersion.CP38_CP38: Path("/opt/python/cp38-cp38/bin"),
         PythonVersion.CP39_CP39: Path("/opt/python/cp39-cp39/bin"),
+        PythonVersion.CP310_CP310: Path("/opt/python/cp310-cp310/bin"),
     }

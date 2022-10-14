@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+* Removed Support for testing in Python 3.6
+* Added Support for testing in Python 3.9 and 3.10
+* Add Python 3.10 support to the PythonVersion constants and pyproject.toml python_versions
+* Update workflow testing version to python 3.10.7
+
 ## [0.2.1] - 2021-10-21
 
 ### Fixed

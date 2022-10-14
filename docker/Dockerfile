@@ -1,4 +1,4 @@
-ARG IMAGE=python:3.8-buster
+ARG IMAGE=python:3.10-buster
 FROM ${IMAGE}
 
 # Set up user for automatic git branch creation

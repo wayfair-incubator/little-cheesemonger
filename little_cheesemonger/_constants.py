@@ -22,6 +22,7 @@ class PythonVersion(str, Enum):
     CP37_CP37M = "cp37-cp37m"
     CP38_CP38 = "cp38-cp38"
     CP39_CP39 = "cp39-cp39"
+    CP310_CP310 = "cp310-cp310"
 
 
 PYTHON_BINARIES = {
@@ -34,6 +35,7 @@ PYTHON_BINARIES = {
             PythonVersion.CP37_CP37M: Path("/opt/python/cp37-cp37m/bin"),
             PythonVersion.CP38_CP38: Path("/opt/python/cp38-cp38/bin"),
             PythonVersion.CP39_CP39: Path("/opt/python/cp39-cp39/bin"),
+            PythonVersion.CP310_CP310: Path("/opt/python/cp310-cp310/bin"),
         },
         Platform.MANYLINUX2010: {
             PythonVersion.CP35_CP35M: Path("/opt/python/cp35-cp35m/bin"),
@@ -41,6 +43,7 @@ PYTHON_BINARIES = {
             PythonVersion.CP37_CP37M: Path("/opt/python/cp37-cp37m/bin"),
             PythonVersion.CP38_CP38: Path("/opt/python/cp38-cp38/bin"),
             PythonVersion.CP39_CP39: Path("/opt/python/cp39-cp39/bin"),
+            PythonVersion.CP310_CP310: Path("/opt/python/cp310-cp310/bin"),
         },
         Platform.MANYLINUX2014: {
             PythonVersion.CP35_CP35M: Path("/opt/python/cp35-cp35m/bin"),
@@ -48,6 +51,7 @@ PYTHON_BINARIES = {
             PythonVersion.CP37_CP37M: Path("/opt/python/cp37-cp37m/bin"),
             PythonVersion.CP38_CP38: Path("/opt/python/cp38-cp38/bin"),
             PythonVersion.CP39_CP39: Path("/opt/python/cp39-cp39/bin"),
+            PythonVersion.CP310_CP310: Path("/opt/python/cp310-cp310/bin"),
         },
     }
 }
