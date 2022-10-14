@@ -9,10 +9,9 @@
   ],
   "enabledManagers": [
     "github-actions",
-    "docker",
+    "dockerfile",
     "pip_requirements",
-    "poetry",
-    "setup_cfg"
+    "poetry"
   ],
   "packageRules": [
     {
